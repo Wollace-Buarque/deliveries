@@ -1,12 +1,7 @@
 # Projeto Deliveries - Documentação Técnica
 
 ## Grupo
-1. Wollace Buarque - 01554427
-2. Robson Nunes - 24008712
-3. Fellipe Soares - 01557822
-4. Bruno Gabriell - 01529450
-5. Hilquiades Soares - 01526768
-6. Fabiano Vandré - 01529527 
+Wollace Buarque - 01554427, Robson Nunes - 24008712, Fellipe Soares - 01557822, Bruno Gabriell - 01529450, Hilquiades Soares - 01526768, Fabiano Vandré - 01529527 
 
 ## Visão Geral
 
@@ -40,27 +35,23 @@ O projeto adota uma **arquitetura de monolito modular** utilizando Turborepo, qu
 - **Validação**: Schema-first com Zod para type safety
 
 ### Arquitetura de Camadas
+Alguns exemplos são fictícios para melhor compreensão
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    PRESENTATION LAYER                       │
 ├─────────────────────────────────────────────────────────────┤
-│  Next.js Frontend          │  Mobile App (Futuro)          │
-│  - React Components        │  - React Native               │
-│  - Custom Hooks           │  - Shared Components          │
-│  - State Management       │  - Native Features            │
+│  Next.js Frontend                                           │
 └─────────────────────────────────────────────────────────────┘
-                              │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                     API GATEWAY LAYER                       │
 ├─────────────────────────────────────────────────────────────┤
-│  Fastify Server                                            │
-│  - Authentication Middleware                               │
-│  - Request Validation                                      │
-│  - Response Transformation                                 │
+│  Fastify Server                                             │
+│  - Authentication Middleware                                │
+│  - Request Validation                                       │
+│  - Response Transformation                                  │
 └─────────────────────────────────────────────────────────────┘
-                              │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    APPLICATION LAYER                        │
@@ -70,26 +61,23 @@ O projeto adota uma **arquitetura de monolito modular** utilizando Turborepo, qu
 │  - Input Validation        │  - Domain Rules                │
 │  - Response Formatting     │  - External API Integration    │
 └─────────────────────────────────────────────────────────────┘
-                              │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      DOMAIN LAYER                           │
 ├─────────────────────────────────────────────────────────────┤
 │  Domain Models             │  Domain Services               │
 │  - Entities                │  - Business Rules              │
-│  - Value Objects           │  - Domain Events               │
-│  - Aggregates              │  - Domain Exceptions           │
+│                            │  - Domain Events               │
+│                            │  - Domain Exceptions           │
 └─────────────────────────────────────────────────────────────┘
-                              │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                    INFRASTRUCTURE LAYER                     │
 ├─────────────────────────────────────────────────────────────┤
 │  Database (PostgreSQL)     │  External Services             │
-│  - Prisma ORM              │  - Payment Gateway             │
-│  - Migrations              │  - Maps API                    │
-│  - Queries                 │  - Notification Service        │
-│                            │  - File Storage                │
+│  - Prisma ORM              │  - Notification Service        │
+│  - Migrations              │                                │
+│  - Queries                 │                                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -126,12 +114,10 @@ interface DeliveryRepository {
 class DeliveryService {
   constructor(
     private deliveryRepository: DeliveryRepository,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService
   ) {}
 
-  async createDelivery(data: CreateDeliveryDto): Promise<Delivery> {
-    // Business logic here
-  }
+  async createDelivery(data: CreateDeliveryDto): Promise<Delivery> {}
 }
 ```
 
@@ -141,7 +127,6 @@ class DeliveryService {
 
 #### 4. **Event-Driven Architecture**
 ```typescript
-// Domain Events
 class DeliveryAcceptedEvent {
   constructor(
     public deliveryId: string,
@@ -150,13 +135,8 @@ class DeliveryAcceptedEvent {
   ) {}
 }
 
-// Event Handlers
 class DeliveryAcceptedHandler {
-  async handle(event: DeliveryAcceptedEvent): Promise<void> {
-    // Send notification to client
-    // Update delivery status
-    // Log activity
-  }
+  async handle(event: DeliveryAcceptedEvent): Promise<void> {}
 }
 ```
 
