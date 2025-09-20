@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  role      UserRole @default(CLIENT)
+  profile   UserProfile?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  deliveriesAsClient     Delivery[] @relation("ClientDeliveries")
+  deliveriesAsDelivery   Delivery[] @relation("DeliveryPersonDeliveries")
+  sentMessages          Message[]  @relation("SentMessages")
+
+  @@map("users")
+}
+
+model UserProfile {
+  id        String  @id @default(cuid())
+  userId    String  @unique
+  name      String
+  phone     String
+  avatar    String?
+  document  String  @unique
+  address   Address @relation(fields: [addressId], references: [id])
+  addressId String  @unique
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_profiles")
+}
+
+model Address {
+  id           String  @id @default(cuid())
+  street       String
+  number       String
+  complement   String?
+  neighborhood String
+  city         String
+  state        String
+  zipCode      String
+  coordinates  Json
+
+  // Relations
+  userProfile     UserProfile?     @relation
+  deliveryOrigin  Delivery[]       @relation("DeliveryOrigin")
+  deliveryDestination Delivery[]   @relation("DeliveryDestination")
+
+  @@map("addresses")
+}
+
+model Delivery {
+  id            String        @id @default(cuid())
+  clientId      String
+  deliveryId    String?
+  status        DeliveryStatus @default(PENDING)
+  description   String
+  value         Float
+  estimatedTime Int
+  actualTime    Int?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Relations
+  client        User      @relation("ClientDeliveries", fields: [clientId], references: [id])
+  deliveryPerson User?    @relation("DeliveryPersonDeliveries", fields: [deliveryId], references: [id])
+  origin        Address   @relation("DeliveryOrigin", fields: [originId], references: [id])
+  destination   Address   @relation("DeliveryDestination", fields: [destinationId], references: [id])
+  originId      String
+  destinationId String
+  messages      Message[]
+
+  @@map("deliveries")
+}
+
+model Message {
+  id         String      @id @default(cuid())
+  deliveryId String
+  senderId   String
+  content    String
+  type       MessageType @default(TEXT)
+  createdAt  DateTime    @default(now())
+
+  // Relations
+  delivery Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+  sender   User     @relation("SentMessages", fields: [senderId], references: [id])
+
+  @@map("messages")
+}
+
+enum UserRole {
+  CLIENT
+  DELIVERY
+  ADMIN
+}
+
+enum DeliveryStatus {
+  PENDING
+  ACCEPTED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+}
