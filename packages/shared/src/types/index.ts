@@ -75,26 +75,6 @@ export interface Message {
 
 export type MessageType = 'TEXT' | 'IMAGE';
 
-// DTOs
-export interface CreateUserDto {
-  email: string;
-  password: string;
-  role: UserRole;
-  profile: Omit<UserProfile, 'id' | 'userId'>;
-}
-
-export interface CreateDeliveryDto {
-  clientId: string;
-  origin: Omit<Address, 'id'>;
-  destination: Omit<Address, 'id'>;
-  description: string;
-  value: number;
-}
-
-export interface UpdateDeliveryStatusDto {
-  status: DeliveryStatus;
-  actualTime?: number;
-}
 
 // API Response Types
 export interface ApiResponse<T = any> {

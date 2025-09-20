@@ -1,11 +1,6 @@
 import Fastify from 'fastify'
-import cors from '@fastify/cors'
-import helmet from '@fastify/helmet'
-import rateLimit from '@fastify/rate-limit'
-import jwt from '@fastify/jwt'
-import multipart from '@fastify/multipart'
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@generated/prisma'
 import { EventBus } from './events/event-bus'
 import { NotificationHandler } from './events/handlers/notification.handler'
 import { UserRepository } from './repositories/user.repository'
@@ -15,6 +10,10 @@ import { DeliveryService } from './services/delivery.service'
 import { authRoutes } from './routes/auth.routes'
 import { userRoutes } from './routes/user.routes'
 import { deliveryRoutes } from './routes/delivery.routes'
+import { registerPlugins } from './config/plugins'
+import { registerErrorHandler } from './config/error-handler'
+import { registerShutdown } from './config/shutdown'
+import { env } from './env'
 
 const fastify = Fastify({
   logger: {
@@ -43,34 +42,6 @@ eventBus.register('DELIVERY_CREATED', notificationHandler)
 eventBus.register('DELIVERY_ACCEPTED', notificationHandler)
 eventBus.register('DELIVERY_STATUS_CHANGED', notificationHandler)
 
-// Register plugins
-async function registerPlugins() {
-  // CORS
-  await fastify.register(cors, {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
-    credentials: true
-  })
-
-  // Security
-  await fastify.register(helmet)
-
-  // Rate limiting
-  await fastify.register(rateLimit, {
-    max: 100,
-    timeWindow: '15 minutes'
-  })
-
-  // JWT
-  await fastify.register(jwt, {
-    secret: process.env.JWT_SECRET || 'your-secret-key'
-  })
-
-  // Multipart for file uploads
-  await fastify.register(multipart)
-
-  // ...existing code...
-}
-
 // Register routes
 async function registerRoutes() {
   // Make services available to routes
@@ -84,64 +55,23 @@ async function registerRoutes() {
   await fastify.register(deliveryRoutes, { prefix: '/deliveries' })
 
   // Health check
-  fastify.get('/health', async (request, reply) => {
+  fastify.get('/health', async () => {
     return { status: 'ok', timestamp: new Date().toISOString() }
   })
 }
 
-// Error handling
-fastify.setErrorHandler(async (error, request, reply) => {
-  fastify.log.error(error)
+registerErrorHandler(fastify)
 
-  if (error.validation) {
-    return reply.status(400).send({
-      success: false,
-      error: 'Validation error',
-      message: error.message,
-      details: error.validation
-    })
-  }
-
-  if (error.statusCode) {
-    return reply.status(error.statusCode).send({
-      success: false,
-      error: error.message
-    })
-  }
-
-  return reply.status(500).send({
-    success: false,
-    error: 'Internal server error'
-  })
-})
-
-// Graceful shutdown
-process.on('SIGINT', async () => {
-  fastify.log.info('Shutting down server...')
-  await prisma.$disconnect()
-  await fastify.close()
-  process.exit(0)
-})
-
-process.on('SIGTERM', async () => {
-  fastify.log.info('Shutting down server...')
-  await prisma.$disconnect()
-  await fastify.close()
-  process.exit(0)
-})
-
-// Start server
 async function start() {
   try {
-    await registerPlugins()
+    await registerPlugins(fastify)
+    registerShutdown(fastify, prisma)
     await registerRoutes()
 
-    const port = parseInt(process.env.PORT || '3001')
-    const host = process.env.HOST || '0.0.0.0'
+    const port = env.PORT
 
-    await fastify.listen({ port, host })
-    console.log(`Server listening on http://${host}:${port}`)
-    // ...existing code...
+    await fastify.listen({ port })
+    console.log(`Server listening on PORT ${port}`)
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
@@ -150,5 +80,4 @@ async function start() {
 
 start()
 
-// Export for testing
 export { fastify, prisma, eventBus }

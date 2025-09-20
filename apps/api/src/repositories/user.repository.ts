@@ -1,14 +1,14 @@
-import { PrismaClient, User, UserProfile } from '@prisma/client';
-import { BaseRepository } from './base.repository';
-import { CreateUserDto, UpdateUserDto } from '../types/dto';
+import { PrismaClient, User, UserProfile } from '@generated/prisma'
+import { BaseRepository } from './base.repository'
+import { CreateUserDto, UpdateUserDto } from '@deliveries/shared'
 
 export interface UserWithProfile extends User {
-  profile: UserProfile | null;
+  profile: UserProfile | null
 }
 
 export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDto, UpdateUserDto> {
   constructor(prisma: PrismaClient) {
-    super(prisma);
+    super(prisma)
   }
 
   async create(data: CreateUserDto): Promise<UserWithProfile> {
@@ -23,19 +23,19 @@ export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDt
             phone: data.profile.phone,
             document: data.profile.document,
             address: {
-              create: data.profile.address,
-            },
-          },
-        },
+              create: data.profile.address
+            }
+          }
+        }
       },
       include: {
         profile: {
           include: {
-            address: true,
-          },
-        },
-      },
-    });
+            address: true
+          }
+        }
+      }
+    })
   }
 
   async findById(id: string): Promise<UserWithProfile | null> {
@@ -44,11 +44,11 @@ export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDt
       include: {
         profile: {
           include: {
-            address: true,
-          },
-        },
-      },
-    });
+            address: true
+          }
+        }
+      }
+    })
   }
 
   async findByEmail(email: string): Promise<UserWithProfile | null> {
@@ -57,34 +57,30 @@ export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDt
       include: {
         profile: {
           include: {
-            address: true,
-          },
-        },
-      },
-    });
+            address: true
+          }
+        }
+      }
+    })
   }
 
-  async findMany(filters?: {
-    role?: string;
-    page?: number;
-    limit?: number;
-  }): Promise<UserWithProfile[]> {
-    const { role, page = 1, limit = 10 } = filters || {};
-    const skip = (page - 1) * limit;
+  async findMany(filters?: { role?: string; page?: number; limit?: number }): Promise<UserWithProfile[]> {
+    const { role, page = 1, limit = 10 } = filters || {}
+    const skip = (page - 1) * limit
 
     return this.prisma.user.findMany({
-      where: role ? { role } : undefined,
+      where: role ? { role: role as any } : undefined,
       skip,
       take: limit,
       include: {
         profile: {
           include: {
-            address: true,
-          },
-        },
+            address: true
+          }
+        }
       },
-      orderBy: { createdAt: 'desc' },
-    });
+      orderBy: { createdAt: 'desc' }
+    })
   }
 
   async update(id: string, data: UpdateUserDto): Promise<UserWithProfile> {
@@ -102,32 +98,32 @@ export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDt
               ...(data.profile.avatar && { avatar: data.profile.avatar }),
               ...(data.profile.address && {
                 address: {
-                  update: data.profile.address,
-                },
-              }),
-            },
-          },
-        }),
+                  update: data.profile.address
+                }
+              })
+            }
+          }
+        })
       },
       include: {
         profile: {
           include: {
-            address: true,
-          },
-        },
-      },
-    });
+            address: true
+          }
+        }
+      }
+    })
   }
 
   async delete(id: string): Promise<void> {
     await this.prisma.user.delete({
-      where: { id },
-    });
+      where: { id }
+    })
   }
 
   async count(filters?: { role?: string }): Promise<number> {
     return this.prisma.user.count({
-      where: filters?.role ? { role: filters.role as any } : undefined,
-    });
+      where: filters?.role ? { role: filters.role as any } : undefined
+    })
   }
 }

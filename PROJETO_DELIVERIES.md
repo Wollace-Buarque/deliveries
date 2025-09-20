@@ -201,32 +201,32 @@ class DeliveryAcceptedHandler {
 - [x] Configurar ESLint, Prettier e Husky
 
 #### 1.2 Autenticação e Autorização
-- [ ] Implementar sistema de registro/login
-- [ ] Implementar JWT authentication
-- [ ] Criar middleware de autenticação
-- [ ] Implementar roles (Cliente, Entregador, Admin)
-- [ ] Criar páginas de login/registro no frontend
+- [x] Implementar sistema de registro/login
+- [x] Implementar JWT authentication
+- [x] Criar middleware de autenticação
+- [x] Implementar roles (Cliente, Entregador, Admin)
+- [] Criar páginas de login/registro no frontend
 
 ### 🎯 Sprint 2 - Core Features (3 semanas)
 **Prioridade: ALTA**
 
 #### 2.1 Gestão de Usuários
-- [ ] CRUD de clientes
-- [ ] CRUD de entregadores
-- [ ] Perfil de usuário
-- [ ] Upload de foto de perfil
-- [ ] Validação de documentos
+- [x] CRUD de clientes
+- [x] CRUD de entregadores
+- [x] Perfil de usuário
+- [x] Upload de foto de perfil
+- [x] Validação de documentos
 
 #### 2.2 Gestão de Entregas
-- [ ] Criar nova entrega
-- [ ] Listar entregas por status
-- [ ] Detalhes da entrega
-- [ ] Atualizar status da entrega
-- [ ] Histórico de entregas
+- [x] Criar nova entrega
+- [x] Listar entregas por status
+- [x] Detalhes da entrega
+- [x] Atualizar status da entrega
+- [x] Histórico de entregas
 
 #### 2.3 Sistema de Localização
-- [ ] Seleção de origem e destino
-- [ ] Cálculo de distância e tempo
+- [x] Seleção de origem e destino
+- [x] Cálculo de distância e tempo
 
 ### 📱 Sprint 3 - Interface e UX (2 semanas)
 **Prioridade: ALTA**

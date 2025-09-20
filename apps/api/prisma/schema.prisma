@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -11,18 +12,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String       @id @default(cuid())
+  email     String       @unique
   password  String
-  role      UserRole @default(CLIENT)
+  role      UserRole     @default(CLIENT)
   profile   UserProfile?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 
   // Relations
-  deliveriesAsClient     Delivery[] @relation("ClientDeliveries")
-  deliveriesAsDelivery   Delivery[] @relation("DeliveryPersonDeliveries")
-  sentMessages          Message[]  @relation("SentMessages")
+  deliveriesAsClient   Delivery[] @relation("ClientDeliveries")
+  deliveriesAsDelivery Delivery[] @relation("DeliveryPersonDeliveries")
+  sentMessages         Message[]  @relation("SentMessages")
 
   @@map("users")
 }
@@ -55,15 +56,15 @@ model Address {
   coordinates  Json
 
   // Relations
-  userProfile     UserProfile?     @relation
-  deliveryOrigin  Delivery[]       @relation("DeliveryOrigin")
+  userProfile         UserProfile? @relation
+  deliveryOrigin      Delivery[]   @relation("DeliveryOrigin")
   deliveryDestination Delivery[]   @relation("DeliveryDestination")
 
   @@map("addresses")
 }
 
 model Delivery {
-  id            String        @id @default(cuid())
+  id            String         @id @default(cuid())
   clientId      String
   deliveryId    String?
   status        DeliveryStatus @default(PENDING)
@@ -71,17 +72,17 @@ model Delivery {
   value         Float
   estimatedTime Int
   actualTime    Int?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   // Relations
-  client        User      @relation("ClientDeliveries", fields: [clientId], references: [id])
-  deliveryPerson User?    @relation("DeliveryPersonDeliveries", fields: [deliveryId], references: [id])
-  origin        Address   @relation("DeliveryOrigin", fields: [originId], references: [id])
-  destination   Address   @relation("DeliveryDestination", fields: [destinationId], references: [id])
-  originId      String
-  destinationId String
-  messages      Message[]
+  client         User      @relation("ClientDeliveries", fields: [clientId], references: [id])
+  deliveryPerson User?     @relation("DeliveryPersonDeliveries", fields: [deliveryId], references: [id])
+  origin         Address   @relation("DeliveryOrigin", fields: [originId], references: [id])
+  destination    Address   @relation("DeliveryDestination", fields: [destinationId], references: [id])
+  originId       String
+  destinationId  String
+  messages       Message[]
 
   @@map("deliveries")
 }

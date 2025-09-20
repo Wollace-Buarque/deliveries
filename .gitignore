@@ -3,6 +3,9 @@ node_modules/
 .pnp
 .pnp.js
 
+# Prisma
+generated/
+
 # Production builds
 .next/
 out/
@@ -105,6 +108,3 @@ temp/
 *.db
 *.sqlite
 *.sqlite3
-
-# Prisma
-prisma/migrations/
