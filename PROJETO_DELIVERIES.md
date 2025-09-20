@@ -1,5 +1,13 @@
 # Projeto Deliveries - Documentação Técnica
 
+## Grupo
+1. Wollace Buarque - 01554427
+2. Robson Nunes - 24008712
+3. Fellipe Soares - 01557822
+4. Bruno Gabriell - 01529450
+5. Hilquiades Soares - 01526768
+6. Fabiano Vandré - 01529527 
+
 ## Visão Geral
 
 O projeto Deliveries é uma aplicação completa de gerenciamento de entregas, desenvolvida como um monolito utilizando Turborepo para orquestração. A arquitetura combina um frontend em Next.js com um backend em Node.js utilizando Fastify, proporcionando uma solução robusta e escalável para o mercado de entregas.
@@ -119,7 +127,6 @@ class DeliveryService {
   constructor(
     private deliveryRepository: DeliveryRepository,
     private notificationService: NotificationService,
-    private mapsService: MapsService
   ) {}
 
   async createDelivery(data: CreateDeliveryDto): Promise<Delivery> {
@@ -129,7 +136,6 @@ class DeliveryService {
 ```
 
 #### 3. **Dependency Injection**
-- Uso de containers de DI para gerenciar dependências
 - Facilita testes unitários e manutenção
 - Permite inversão de controle
 
@@ -239,11 +245,8 @@ class DeliveryAcceptedHandler {
 - [ ] Histórico de entregas
 
 #### 2.3 Sistema de Localização
-- [ ] Integração com Google Maps
 - [ ] Seleção de origem e destino
 - [ ] Cálculo de distância e tempo
-- [ ] Rastreamento em tempo real
-- [ ] Geocoding de endereços
 
 ### 📱 Sprint 3 - Interface e UX (2 semanas)
 **Prioridade: ALTA**
