@@ -1,5 +1,3 @@
-import { z } from 'zod'
-
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
