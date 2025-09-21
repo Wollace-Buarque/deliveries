@@ -1,20 +1,3 @@
-const formatCurrency = (value: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
-  }).format(value)
-}
-
-const formatDate = (date: Date): string => {
-  return new Intl.DateTimeFormat('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date)
-}
-
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
   const R = 6371 // Earth's radius in kilometers
   const dLat = (lat2 - lat1) * (Math.PI / 180)
@@ -30,12 +13,6 @@ const calculateEstimatedTime = (distance: number): number => {
   // Assuming average speed of 30 km/h in urban areas
   const averageSpeed = 30
   return Math.ceil((distance / averageSpeed) * 60) // in minutes
-}
-
-const validateDocument = (document: string): boolean => {
-  // Brazilian CPF validation
-  const cpfRegex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/
-  return cpfRegex.test(document)
 }
 
 const createApiResponse = <T>({
@@ -71,11 +48,8 @@ const createPaginatedResponse = <T>(data: T[], page: number, limit: number, tota
 }
 
 export {
-  formatCurrency,
-  formatDate,
   calculateDistance,
   calculateEstimatedTime,
-  validateDocument,
   createApiResponse,
   createPaginatedResponse
 };

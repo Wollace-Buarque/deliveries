@@ -109,7 +109,7 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       const userRole = (request.user as any).role
 
       const paramsSchema = z.object({
-        id: z.string().uuid('Invalid delivery ID')
+        id: z.cuid('Invalid delivery ID')
       })
 
       const { id } = paramsSchema.parse(request.params)
@@ -144,7 +144,7 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       const userRole = (request.user as any).role
 
       const paramsSchema = z.object({
-        id: z.string().uuid('Invalid delivery ID')
+        id: z.cuid('Invalid delivery ID')
       })
 
       const { id } = paramsSchema.parse(request.params)

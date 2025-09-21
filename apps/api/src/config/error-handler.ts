@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify'
-import { ZodError } from 'zod'
+import { ZodError, z } from 'zod'
 
 export function registerErrorHandler(fastify: FastifyInstance) {
   fastify.setErrorHandler(async (error, request, reply) => {
@@ -10,7 +10,7 @@ export function registerErrorHandler(fastify: FastifyInstance) {
         success: false,
         error: 'Validation error',
         message: error.message,
-        details: error.errors
+        details: z.flattenError(error)
       })
     }
 

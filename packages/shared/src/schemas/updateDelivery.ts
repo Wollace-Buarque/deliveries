@@ -1,5 +1,5 @@
-import { z } from 'zod';
-import { createDeliverySchema } from './delivery';
+import { z } from 'zod'
+import { createDeliverySchema } from './delivery'
 
-export const updateDeliverySchema = createDeliverySchema.partial();
-export type UpdateDeliveryDto = z.infer<typeof updateDeliverySchema>;
+export const updateDeliverySchema = createDeliverySchema.partial()
+export type UpdateDeliveryDto = z.infer<typeof updateDeliverySchema>

@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const userProfileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   phone: z.string().min(10, 'Invalid phone number'),
-  avatar: z.string().url('Invalid avatar URL').optional(),
+  avatar: z.url('Invalid avatar URL').optional(),
   document: z.string().min(11, 'Invalid document'),
   address: z.object({
     street: z.string().min(1, 'Street is required'),
@@ -18,20 +18,20 @@ export const userProfileSchema = z.object({
       lng: z.number().min(-180).max(180)
     })
   })
-});
+})
 
 export const createUserSchema = z.object({
-  email: z.string().email('Invalid email format'),
+  email: z.email('Invalid email format'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   role: z.enum(['CLIENT', 'DELIVERY', 'ADMIN']),
   profile: userProfileSchema
-});
+})
 
 export const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
+  email: z.email('Invalid email format'),
   password: z.string().min(8, 'Password must be at least 8 characters')
-});
+})
 
-export type CreateUserDto = z.infer<typeof createUserSchema>;
-export type LoginDto = z.infer<typeof loginSchema>;
-export type UserProfileDto = z.infer<typeof userProfileSchema>;
+export type CreateUserDto = z.infer<typeof createUserSchema>
+export type LoginDto = z.infer<typeof loginSchema>
+export type UserProfileDto = z.infer<typeof userProfileSchema>
