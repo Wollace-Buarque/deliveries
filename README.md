@@ -12,11 +12,15 @@ Este é um projeto monorepo para gerenciamento de entregas, composto por:
    ```sh
    npm install
    ```
-2. Configure as variáveis de ambiente conforme o arquivo `env.example`.
-3. Inicie o projeto:
+2. Configure as variáveis de ambiente conforme o arquivo `env.example` na pasta api.
+3. Inicie o projeto na pasta deliveries:
    ```sh
    npm run dev
    ```
+
+## Postman
+
+Utilize os arquivos separados dentro da pasta `postman` para importar as rotas da aplicações e realizar testes no backend via Postman.
 
 ## Estrutura
 
@@ -25,6 +29,7 @@ Este é um projeto monorepo para gerenciamento de entregas, composto por:
 - `packages/shared` — Código compartilhado entre API e Web
 
 ## Tecnologias principais
+
 - Fastify
 - Prisma
 - Next.js
