@@ -29,11 +29,8 @@ export {
 
 // Export utilitários (apenas funções)
 export {
-	formatCurrency,
-	formatDate,
 	calculateDistance,
 	calculateEstimatedTime,
-	validateDocument,
 	createApiResponse,
 	createPaginatedResponse
 } from './utils';
