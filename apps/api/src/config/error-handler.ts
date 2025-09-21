@@ -9,7 +9,6 @@ export function registerErrorHandler(fastify: FastifyInstance) {
       return reply.status(400).send({
         success: false,
         error: 'Validation error',
-        message: error.message,
         details: z.flattenError(error)
       })
     }
