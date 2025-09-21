@@ -21,7 +21,7 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       const userId = (request.user as any).userId
 
       const querySchema = z.object({
-        status: z.string(),
+        status: z.string().optional(),
         page: z.coerce.number().default(1),
         limit: z.coerce.number().default(10)
       })
@@ -34,7 +34,7 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       } else if (userRole === 'DELIVERY') {
         result = await deliveryService.getDeliveriesByDeliveryPerson(userId, page, limit)
       } else {
-        result = await deliveryService.getDeliveriesByStatus(status, page, limit)
+        result = await deliveryService.getDeliveriesByStatus(status!, page, limit)
       }
 
       return reply.send(createPaginatedResponse(result.deliveries, page, limit, result.total))
@@ -62,8 +62,9 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
 
       const deliveryService = fastify.deliveryService
 
-      const result = await deliveryService.getAvailableDeliveries(page, limit)
-      return reply.send(createPaginatedResponse(result.deliveries, page, limit, result.total))
+      const { deliveries, total } = await deliveryService.getAvailableDeliveries(page, limit)
+
+      return reply.send(createPaginatedResponse(deliveries, page, limit, total))
     }
   )
 
@@ -84,7 +85,11 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       const deliveryService = fastify.deliveryService
       const userId = (request.user as any).userId
 
-      const body = createDeliverySchema.parse(request.body)
+      const deliverySchema = createDeliverySchema.extend({
+        clientId: z.cuid().optional()
+      })
+
+      const body = deliverySchema.parse(request.body)
 
       const delivery = await deliveryService.create({
         ...body,

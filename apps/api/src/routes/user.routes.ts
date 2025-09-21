@@ -3,6 +3,7 @@ import { updateUserSchema } from '@deliveries/shared'
 
 import { createApiResponse, createPaginatedResponse } from '@deliveries/shared'
 import { authenticate } from '@/middleware/authentication.middleware'
+import { safeRetrieveDomain } from '@/utils'
 import z from 'zod'
 
 export async function userRoutes(fastify: FastifyInstance) {
@@ -21,7 +22,7 @@ export async function userRoutes(fastify: FastifyInstance) {
         return reply.status(404).send(createApiResponse({ success: false, error: 'User not found' }))
       }
 
-      return reply.send(createApiResponse({ success: true, data: user, message: 'Profile retrieved successfully' }))
+      return reply.send(createApiResponse({ success: true, data: safeRetrieveDomain(user), message: 'Profile retrieved successfully' }))
     }
   )
 
@@ -38,7 +39,7 @@ export async function userRoutes(fastify: FastifyInstance) {
       const body = updateUserSchema.parse(request.body)
       const user = await userService.update(userId, body)
 
-      return reply.send(createApiResponse({ success: true, data: user, message: 'Profile updated successfully' }))
+      return reply.send(createApiResponse({ success: true, data: safeRetrieveDomain(user), message: 'Profile updated successfully' }))
     }
   )
 
@@ -60,7 +61,7 @@ export async function userRoutes(fastify: FastifyInstance) {
       const userId = (request.user as any).userId
       const user = await userService.uploadAvatar(userId, avatarUrl)
 
-      return reply.send(createApiResponse({ success: true, data: user, message: 'Avatar uploaded successfully' }))
+      return reply.send(createApiResponse({ success: true, data: safeRetrieveDomain(user), message: 'Avatar uploaded successfully' }))
     }
   )
 
@@ -87,8 +88,9 @@ export async function userRoutes(fastify: FastifyInstance) {
 
       const { role, page, limit } = querySchema.parse(request.query)
       const { users, total } = await userService.getUsersByRole(role, page, limit)
+      let safeUsers = users.map(user => safeRetrieveDomain(user))
 
-      return reply.send(createPaginatedResponse(users, page, limit, total))
+      return reply.send(createPaginatedResponse(safeUsers, page, limit, total))
     }
   )
 }

@@ -51,11 +51,15 @@ export class DeliveryRepository extends BaseRepository<DeliveryWithDetails, Crea
   async create(data: CreateDeliveryDto): Promise<DeliveryWithDetails> {
     return await this.prisma.delivery.create({
       data: {
-        clientId: data.clientId,
         status: 'PENDING',
         description: data.description,
         value: data.value,
         estimatedTime: data.estimatedTime ?? 30,
+        client: {
+          connect: {
+            id: data.clientId
+          }
+        },
         origin: {
           create: {
             street: data.origin.street,
