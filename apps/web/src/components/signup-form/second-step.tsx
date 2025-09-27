@@ -122,7 +122,7 @@ export function SecondStep({ register, setValue, isSubmitting, errors, handleBac
           Voltar
         </button>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" isLoading={isSubmitting}>
           Cadastrar
         </Button>
       </div>
