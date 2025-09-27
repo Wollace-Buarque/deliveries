@@ -1,6 +1,8 @@
 'use client'
 
 import z from 'zod'
+import Link from 'next/link'
+
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -34,7 +36,7 @@ export type SignUpSchema = z.infer<typeof signUpSchema>
 
 enum SignUpStep {
   register,
-  details 
+  details
 }
 
 export function SignUpForm() {
@@ -113,7 +115,9 @@ export function SignUpForm() {
     <div>
       <h1 className="text-3xl font-bold">{step === SignUpStep.register ? 'Crie sua conta' : 'Quase lá!'}</h1>
 
-      {step === SignUpStep.register && <p className="mt-1 text-sm text-zinc-700">Informe seu e-mail e defina uma senha forte.</p>}
+      {step === SignUpStep.register && (
+        <p className="mt-1 text-sm text-zinc-700">Informe seu e-mail e defina uma senha forte.</p>
+      )}
 
       {step === SignUpStep.details && (
         <p className="mt-1 text-sm text-zinc-700">
@@ -143,6 +147,15 @@ export function SignUpForm() {
           )}
         </div>
       </form>
+
+      {step === SignUpStep.register && (
+        <div className="mt-4 text-sm text-zinc-700">
+          <span>Já tem uma conta?</span>{' '}
+          <Link href="/login" className="text-sky-700 hover:underline">
+            Entre agora
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

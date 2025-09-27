@@ -1,6 +1,8 @@
 'use client'
 
 import z from 'zod'
+import Link from 'next/link'
+
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
@@ -61,6 +63,13 @@ export function SignInForm() {
           </Button>
         </div>
       </form>
+
+      <div className="mt-4 text-sm text-zinc-700">
+        <span>Não tem uma conta?</span>{' '}
+        <Link href="/register" className="text-sky-700 hover:underline">
+          Crie uma agora
+        </Link>
+      </div>
     </div>
   )
 }
