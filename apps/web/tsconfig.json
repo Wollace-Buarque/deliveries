@@ -22,7 +22,6 @@
     "paths": {
       "@/*": ["./src/*"],
       "@deliveries/shared": ["../../packages/shared/src"],
-      "@deliveries/ui": ["../../packages/ui/src"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
