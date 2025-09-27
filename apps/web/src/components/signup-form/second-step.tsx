@@ -9,6 +9,7 @@ import { Button } from '../button'
 interface FirstStepProps {
   register: (name: keyof SignUpSchema) => any
   setValue: (name: keyof SignUpSchema, value: any) => void
+  clearErrors: (name: (keyof SignUpSchema)[]) => void
   handleBackStep: () => void
   isSubmitting: boolean
   errors: {
@@ -17,7 +18,7 @@ interface FirstStepProps {
   watch?: (name: string) => any
 }
 
-export function SecondStep({ register, setValue, isSubmitting, errors, handleBackStep }: FirstStepProps) {
+export function SecondStep({ register, setValue, clearErrors, isSubmitting, errors, handleBackStep }: FirstStepProps) {
   const [isFetching, setIsFetching] = useState(false)
 
   async function handleCepBlur(event: FocusEvent<HTMLInputElement>) {
@@ -34,6 +35,7 @@ export function SecondStep({ register, setValue, isSubmitting, errors, handleBac
         setValue('neighborhood', data.bairro || '')
         setValue('city', data.localidade || '')
         setValue('state', data.uf || '')
+        clearErrors(['street', 'neighborhood', 'city', 'state'])
       }
     } finally {
       setIsFetching(false)

@@ -43,6 +43,7 @@ export function SignUpForm() {
   const [step, setStep] = useState<SignUpStep>(SignUpStep.register)
 
   const {
+    clearErrors,
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
@@ -143,6 +144,7 @@ export function SignUpForm() {
               isSubmitting={isSubmitting}
               handleBackStep={handleBackStep}
               setValue={setValue}
+              clearErrors={clearErrors}
             />
           )}
         </div>
