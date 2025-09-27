@@ -30,6 +30,10 @@ export class UserService extends BaseService<UserWithProfile, CreateUserDto, Upd
     return this.userRepository.findByEmail(email)
   }
 
+  async findByDocument(document: string): Promise<UserWithProfile | null> {
+    return this.userRepository.findByDocument(document)
+  }
+
   async validatePassword(password: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword)
   }

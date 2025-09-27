@@ -64,6 +64,23 @@ export class UserRepository extends BaseRepository<UserWithProfile, CreateUserDt
     })
   }
 
+  async findByDocument(document: string): Promise<UserWithProfile | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        profile: {
+          document
+        }
+      },
+      include: {
+        profile: {
+          include: {
+            address: true
+          }
+        }
+      }
+    })
+  }
+
   async findMany(filters?: { role?: string; page?: number; limit?: number }): Promise<UserWithProfile[]> {
     const { role, page = 1, limit = 10 } = filters || {}
     const skip = (page - 1) * limit

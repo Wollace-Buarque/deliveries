@@ -13,6 +13,11 @@ export async function authRoutes(fastify: FastifyInstance) {
       return reply.status(400).send(createApiResponse({ success: false, error: 'User already exists' }))
     }
 
+    const existingDocumentUser = await userService.findByDocument(parsedBody.profile.document)
+    if (existingDocumentUser) {
+      return reply.status(400).send(createApiResponse({ success: false, error: 'Document already in use' }))
+    }
+
     const user = await userService.create(parsedBody)
 
     const accessToken = fastify.jwt.sign({ userId: user.id, email: user.email, role: user.role }, { expiresIn: '15m' })
