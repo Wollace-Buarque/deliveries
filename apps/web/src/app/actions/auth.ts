@@ -37,10 +37,9 @@ async function signUp(data: SignUpSchema, lat?: string, lng?: string) {
     const { data: responseData } = await api.post('/auth/register', body)
 
     const cookiesStore = await cookies()
-    cookiesStore.set('token', responseData.accessToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
-    cookiesStore.set('refreshToken', responseData.refreshToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
-
-    api.defaults.headers.common['Authorization'] = `Bearer ${responseData.accessToken}`
+    
+    cookiesStore.set('token', responseData.data.accessToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
+    cookiesStore.set('refreshToken', responseData.data.refreshToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
 
     return { success: true, message: 'Usuário cadastrado com sucesso!' }
   } catch (error) {
@@ -69,10 +68,8 @@ async function signIn(data: SignInSchema) {
     const { data: responseData } = await api.post('/auth/login', body)
 
     const cookiesStore = await cookies()
-    cookiesStore.set('token', responseData.accessToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
-    cookiesStore.set('refreshToken', responseData.refreshToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
-
-    api.defaults.headers.common['Authorization'] = `Bearer ${responseData.accessToken}`
+    cookiesStore.set('token', responseData.data.accessToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
+    cookiesStore.set('refreshToken', responseData.data.refreshToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
 
     return { success: true, message: 'Logado com sucesso!' }
   } catch (error) {
