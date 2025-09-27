@@ -12,6 +12,8 @@ import { toast } from 'sonner'
 import { signUp } from '@/app/actions/auth'
 import { redirect } from 'next/navigation'
 
+import { isValidCPF } from '@/lib/validators'
+
 const signUpSchema = z.object({
   email: z.email('E-mail inválido'),
   password: z.string().min(8, 'No mínimo 8 caracteres'),
@@ -22,7 +24,11 @@ const signUpSchema = z.object({
       message: 'Digite seu nome completo'
     }),
   phone: z.string().min(8, 'Celular obrigatório'),
-  document: z.string().length(11, 'CPF inválido'),
+  document: z
+    .string()
+    .min(11, 'O CPF deve no mínimo 11 dígitos')
+    .max(14, 'O CPF deve ter no máximo 14 dígitos')
+    .refine((value) => isValidCPF(value), { message: 'CPF inválido' }),
   zipCode: z.string().length(8, 'CEP inválido'),
   street: z.string().min(5, 'Logradouro obrigatório'),
   neighborhood: z.string().min(2, 'Bairro obrigatório'),
