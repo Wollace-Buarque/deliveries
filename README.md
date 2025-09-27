@@ -8,15 +8,20 @@ Este é um projeto monorepo para gerenciamento de entregas, composto por:
 
 ## Como rodar o projeto
 
-1. Instale as dependências:
+1. Instale as dependências na pasta raiz:
    ```sh
    npm install
    ```
 2. Configure as variáveis de ambiente conforme o arquivo `env.example` na pasta api.
-3. Inicie o projeto na pasta deliveries:
+3. Suba o container docker:
+   ```sh
+   docker compose up -d
+   ```
+4. Inicie o projeto na pasta raiz:
    ```sh
    npm run dev
    ```
+5. Acesso o front-end na url: http://localhost:3000
 
 ## Postman
 
