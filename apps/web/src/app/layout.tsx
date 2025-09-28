@@ -7,7 +7,10 @@ import { Toaster } from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Deliveries - Sistema de Entregas',
+  title: {
+    default: 'Sistema de Entregas',
+    template: 'Deliveries - %s'
+  },
   description: 'Sistema completo de gerenciamento de entregas'
 }
 
