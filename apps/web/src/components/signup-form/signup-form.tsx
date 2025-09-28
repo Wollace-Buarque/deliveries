@@ -89,7 +89,12 @@ export function SignUpForm() {
 
     try {
       const geoResponse = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`,
+        {
+          next: {
+            revalidate: 60 * 30
+          }
+        }
       )
       const geoResponseData = await geoResponse.json()
       if (geoResponseData && geoResponseData.length > 0) {
