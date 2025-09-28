@@ -77,12 +77,12 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
       <div className="flex gap-4">
         <div>
           <Label htmlFor="logradouro">Logradouro</Label>
-          <Input type="text" placeholder="Rua/Avenida" {...register('street')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite sua rua/avenida" {...register('street')} disabled={isFetching} />
           <InputError field={errors.street} />
         </div>
         <div>
           <Label htmlFor="neighborhood">Bairro</Label>
-          <Input type="text" placeholder="Bairro" {...register('neighborhood')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite seu bairro" {...register('neighborhood')} disabled={isFetching} />
           <InputError field={errors.neighborhood} />
         </div>
       </div>
@@ -90,12 +90,12 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
       <div className="flex gap-4">
         <div>
           <Label htmlFor="city">Cidade</Label>
-          <Input type="text" placeholder="Cidade" {...register('city')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite sua cidade" {...register('city')} disabled={isFetching} />
           <InputError field={errors.city} />
         </div>
         <div>
           <Label htmlFor="state">Estado</Label>
-          <Input type="text" placeholder="UF" maxLength={2} {...register('state')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite seu estado" maxLength={2} {...register('state')} disabled={isFetching} />
           <InputError field={errors.state} />
         </div>
       </div>
@@ -103,13 +103,13 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
       <div className="flex gap-4">
         <div>
           <Label htmlFor="number">Número</Label>
-          <Input type="text" placeholder="Número" {...register('number')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite seu número" {...register('number')} disabled={isFetching} />
           <InputError field={errors.number} />
         </div>
 
         <div>
           <Label htmlFor="complement">Complemento</Label>
-          <Input type="text" placeholder="Complemento" {...register('complement')} disabled={isFetching} />
+          <Input type="text" placeholder="Digite seu complemento" {...register('complement')} disabled={isFetching} />
           <InputError field={errors.complement} />
         </div>
       </div>
