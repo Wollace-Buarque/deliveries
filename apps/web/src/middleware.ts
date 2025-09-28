@@ -8,7 +8,7 @@ const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = '/login'
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
   const publicRoute = publicRoutes.includes(path)
-  const authToken = request.cookies.get('token')
+  const authToken = request.cookies.get('token')?.value
 
   if (!authToken && publicRoute) return NextResponse.next()
 
