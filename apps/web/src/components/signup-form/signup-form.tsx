@@ -12,29 +12,32 @@ import { toast } from 'sonner'
 import { signUp } from '@/app/actions/auth'
 import { redirect } from 'next/navigation'
 
-import { isValidCPF } from '@/lib/validators'
+import { isValidCPF, isPhoneNumberValid, isValidZipCode } from '@/lib/validators'
 
 const signUpSchema = z.object({
   email: z.email('E-mail inválido'),
   password: z.string().min(8, 'No mínimo 8 caracteres'),
-  name: z
+  name: z.string().refine((value) => value.trim().split(' ').length >= 2, {
+    message: 'Digite seu nome completo'
+  }),
+  phone: z
     .string()
-    .min(2, 'Nome obrigatório')
-    .refine((value) => value.trim().split(' ').length >= 2, {
-      message: 'Digite seu nome completo'
-    }),
-  phone: z.string().min(8, 'Celular obrigatório'),
+    .min(9, 'O celular deve ter no mínimo 9 dígitos')
+    .refine((value) => isPhoneNumberValid(value), { message: 'Celular inválido' }),
   document: z
     .string()
-    .min(11, 'O CPF deve no mínimo 11 dígitos')
+    .min(11, 'O CPF deve ter no mínimo 11 dígitos')
     .max(14, 'O CPF deve ter no máximo 14 dígitos')
     .refine((value) => isValidCPF(value), { message: 'CPF inválido' }),
-  zipCode: z.string().length(8, 'CEP inválido'),
-  street: z.string().min(5, 'Logradouro obrigatório'),
-  neighborhood: z.string().min(2, 'Bairro obrigatório'),
-  city: z.string().min(2, 'Cidade obrigatório'),
-  state: z.string().min(2, 'Estado obrigatório'),
-  number: z.string().min(1, 'Número obrigatório'),
+  zipCode: z
+    .string()
+    .min(8, 'O CEP deve ter no mínimo 8 dígitos')
+    .refine((value) => isValidZipCode(value), { message: 'CEP inválido' }),
+  street: z.string({ error: 'A rua é obrigatória' }),
+  neighborhood: z.string({ error: 'O bairro é obrigatório' }),
+  city: z.string({ error: 'A cidade é obrigatória' }),
+  state: z.string().length(2, 'Estado incorreto'),
+  number: z.string({ error: 'O número é obrigatório' }),
   complement: z.string().optional()
 })
 

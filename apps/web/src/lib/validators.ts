@@ -20,4 +20,14 @@ function isValidCPF(cpf: string) {
   return !(rest(10, 2) !== validator[0] || rest(11, 1) !== validator[1])
 }
 
-export { isValidCPF }
+function isPhoneNumberValid(phone: string) {
+  const phoneRegex = /^\(?\d{2}\)?[\s-]?[\s9]?\d{4}-?\d{4}$/
+  return phoneRegex.test(phone)
+}
+
+function isValidZipCode(zipCode: string) {
+  const zipCodeRegex = /^\d{5}-?\d{3}$/
+  return zipCodeRegex.test(zipCode)
+}
+
+export { isValidCPF, isPhoneNumberValid, isValidZipCode }
