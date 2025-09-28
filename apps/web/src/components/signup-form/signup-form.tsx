@@ -58,7 +58,7 @@ export function SignUpForm() {
     formState: { isSubmitting, errors },
     trigger,
     setValue
-  } = useForm<SignUpSchema>({
+  } = useForm({
     resolver: zodResolver(signUpSchema),
     mode: 'onTouched'
   })

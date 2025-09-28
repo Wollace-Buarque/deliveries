@@ -25,7 +25,7 @@ export function SignInForm() {
     register,
     handleSubmit,
     formState: { isSubmitting, errors }
-  } = useForm<SignInSchema>({
+  } = useForm({
     resolver: zodResolver(signInSchema),
     mode: 'onTouched'
   })
