@@ -130,15 +130,10 @@ export function SignUpForm() {
     <div>
       <h1 className="text-3xl font-bold">{step === SignUpStep.register ? 'Crie sua conta' : 'Quase lá!'}</h1>
 
-      {step === SignUpStep.register && (
-        <p className="mt-1 text-sm text-zinc-700">Informe seu e-mail e defina uma senha forte.</p>
-      )}
-
-      {step === SignUpStep.details && (
-        <p className="mt-1 text-sm text-zinc-700">
-          Por favor, preencha os dados restantes para completar seu cadastro.
-        </p>
-      )}
+      <p className="mt-1 text-sm text-zinc-700">
+        {step === SignUpStep.register && 'Informe seu e-mail e defina uma senha forte.'}
+        {step === SignUpStep.details && 'Por favor, preencha os dados restantes para completar seu cadastro.'}
+      </p>
 
       <form onSubmit={handleSubmit(handleSignUp)} className="mt-4">
         <div className="flex w-96 flex-col gap-3">
