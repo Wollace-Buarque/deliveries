@@ -59,7 +59,7 @@ export function SignInForm() {
           </div>
 
           <Button type="submit" isLoading={isSubmitting}>
-            Entrar
+            {isSubmitting ? 'Entrando...' : 'Entrar'}
           </Button>
         </div>
       </form>

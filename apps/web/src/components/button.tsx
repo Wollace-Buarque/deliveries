@@ -12,7 +12,7 @@ export function Button({ className, children, isLoading, ...rest }: ButtonProps)
   return (
     <button
       className={cn(
-        'flex cursor-pointer items-center justify-center gap-2 rounded-md bg-sky-300 px-4 py-2 text-sm font-semibold text-sky-900 transition-colors enabled:hover:bg-sky-400 disabled:brightness-90',
+        'flex items-center justify-center gap-2 rounded-md bg-sky-300 px-4 py-2 text-sm font-semibold text-sky-900 transition-all active:scale-[.99] enabled:cursor-pointer enabled:hover:bg-sky-400 disabled:brightness-90',
         className
       )}
       {...rest}
