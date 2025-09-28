@@ -19,13 +19,13 @@ export function FirstStep({ register, handleNextStep, isSubmitting, errors }: Fi
     <>
       <div>
         <Label htmlFor="email">E-mail</Label>
-        <Input type="email" placeholder="Digite seu e-mail" {...register('email')} />
+        <Input type="email" id="email" placeholder="Digite seu e-mail" {...register('email')} />
         <InputError field={errors.email} />
       </div>
 
       <div>
         <Label htmlFor="password">Senha</Label>
-        <Input type="password" placeholder="Digite sua senha" {...register('password')} />
+        <Input type="password" id="password" placeholder="Digite sua senha" {...register('password')} />
         <InputError field={errors.password} />
       </div>
 
