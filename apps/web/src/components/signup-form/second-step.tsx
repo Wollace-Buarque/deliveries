@@ -115,14 +115,14 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
       </div>
 
       <div className="mt-2 flex justify-between gap-2">
-        <button
+        <Button
           type="button"
-          className="cursor-pointer rounded-md bg-zinc-300 px-4 py-1.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-400"
+          className="bg-zinc-300 text-zinc-700 enabled:hover:bg-zinc-400"
           onClick={handleBackStep}
           disabled={isSubmitting}
         >
           Voltar
-        </button>
+        </Button>
 
         <Button type="submit" isLoading={isSubmitting}>
           Cadastrar
