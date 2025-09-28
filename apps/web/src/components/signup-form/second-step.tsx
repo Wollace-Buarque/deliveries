@@ -47,19 +47,19 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
       <div>
         <Label htmlFor="name">Nome</Label>
         <Input type="text" placeholder="Digite seu nome" {...register('name')} />
-        {errors.name && <InputError message={errors.name.message as string} />}
+        <InputError field={errors.name} />
       </div>
 
       <div>
         <Label htmlFor="phone">Celular</Label>
         <Input type="text" placeholder="Digite seu celular" {...register('phone')} />
-        {errors.phone && <InputError message={errors.phone.message as string} />}
+        <InputError field={errors.phone} />
       </div>
 
       <div>
         <Label htmlFor="document">CPF</Label>
         <Input type="text" placeholder="Digite seu CPF" {...register('document')} />
-        {errors.document && <InputError message={errors.document.message as string} />}
+        <InputError field={errors.document} />
       </div>
 
       <div>
@@ -71,19 +71,19 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
           onBlur={handleCepBlur}
           disabled={isFetching}
         />
-        {errors.zipCode && <InputError message={errors.zipCode.message as string} />}
+        <InputError field={errors.zipCode} />
       </div>
 
       <div className="flex gap-4">
         <div>
           <Label htmlFor="logradouro">Logradouro</Label>
           <Input type="text" placeholder="Rua/Avenida" {...register('street')} disabled={isFetching} />
-          {errors.street && <InputError message={errors.street.message as string} />}
+          <InputError field={errors.street} />
         </div>
         <div>
           <Label htmlFor="neighborhood">Bairro</Label>
           <Input type="text" placeholder="Bairro" {...register('neighborhood')} disabled={isFetching} />
-          {errors.neighborhood && <InputError message={errors.neighborhood.message as string} />}
+          <InputError field={errors.neighborhood} />
         </div>
       </div>
 
@@ -91,12 +91,12 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
         <div>
           <Label htmlFor="city">Cidade</Label>
           <Input type="text" placeholder="Cidade" {...register('city')} disabled={isFetching} />
-          {errors.city && <InputError message={errors.city.message as string} />}
+          <InputError field={errors.city} />
         </div>
         <div>
           <Label htmlFor="state">Estado</Label>
           <Input type="text" placeholder="UF" maxLength={2} {...register('state')} disabled={isFetching} />
-          {errors.state && <InputError message={errors.state.message as string} />}
+          <InputError field={errors.state} />
         </div>
       </div>
 
@@ -104,13 +104,13 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
         <div>
           <Label htmlFor="number">Número</Label>
           <Input type="text" placeholder="Número" {...register('number')} disabled={isFetching} />
-          {errors.number && <InputError message={errors.number.message as string} />}
+          <InputError field={errors.number} />
         </div>
 
         <div>
           <Label htmlFor="complement">Complemento</Label>
           <Input type="text" placeholder="Complemento" {...register('complement')} disabled={isFetching} />
-          {errors.complement && <InputError message={errors.complement.message as string} />}
+          <InputError field={errors.complement} />
         </div>
       </div>
 

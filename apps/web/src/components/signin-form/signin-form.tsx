@@ -49,13 +49,13 @@ export function SignInForm() {
           <div>
             <Label htmlFor="email">E-mail</Label>
             <Input type="email" placeholder="Digite seu e-mail" {...register('email')} />
-            {errors.email && <InputError message={errors.email.message as string} />}
+            <InputError field={errors.email} />
           </div>
 
           <div>
             <Label htmlFor="password">Senha</Label>
             <Input type="password" placeholder="Digite sua senha" {...register('password')} />
-            {errors.password && <InputError message={errors.password.message as string} />}
+            <InputError field={errors.password} />
           </div>
 
           <Button type="submit" isLoading={isSubmitting}>
