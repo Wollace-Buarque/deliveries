@@ -44,12 +44,12 @@ const signUpSchema = z.object({
 export type SignUpSchema = z.infer<typeof signUpSchema>
 
 enum SignUpStep {
-  register,
-  details
+  REGISTER,
+  DETAILS
 }
 
 export function SignUpForm() {
-  const [step, setStep] = useState<SignUpStep>(SignUpStep.register)
+  const [step, setStep] = useState<SignUpStep>(SignUpStep.REGISTER)
 
   const {
     clearErrors,
@@ -67,11 +67,11 @@ export function SignUpForm() {
     const isEmailAndPasswordValid = await trigger(['email', 'password'])
     if (!isEmailAndPasswordValid) return
 
-    setStep(SignUpStep.details)
+    setStep(SignUpStep.DETAILS)
   }
 
   function handleBackStep() {
-    setStep(SignUpStep.register)
+    setStep(SignUpStep.REGISTER)
   }
 
   async function handleAddressLookup(params: {
@@ -128,16 +128,16 @@ export function SignUpForm() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold">{step === SignUpStep.register ? 'Crie sua conta' : 'Quase lá!'}</h1>
+      <h1 className="text-3xl font-bold">{step === SignUpStep.REGISTER ? 'Crie sua conta' : 'Quase lá!'}</h1>
 
       <p className="mt-1 text-sm text-zinc-700">
-        {step === SignUpStep.register && 'Informe seu e-mail e defina uma senha forte.'}
-        {step === SignUpStep.details && 'Por favor, preencha os dados restantes para completar seu cadastro.'}
+        {step === SignUpStep.REGISTER && 'Informe seu e-mail e defina uma senha forte.'}
+        {step === SignUpStep.DETAILS && 'Por favor, preencha os dados restantes para completar seu cadastro.'}
       </p>
 
       <form onSubmit={handleSubmit(handleSignUp)} className="mt-4">
         <div className="flex w-96 flex-col gap-3">
-          {step === SignUpStep.register && (
+          {step === SignUpStep.REGISTER && (
             <FirstStep
               register={register}
               errors={errors}
@@ -146,7 +146,7 @@ export function SignUpForm() {
             />
           )}
 
-          {step === SignUpStep.details && (
+          {step === SignUpStep.DETAILS && (
             <SecondStep
               register={register}
               errors={errors}
@@ -159,7 +159,7 @@ export function SignUpForm() {
         </div>
       </form>
 
-      {step === SignUpStep.register && (
+      {step === SignUpStep.REGISTER && (
         <div className="mt-4 text-sm text-zinc-700">
           <span>Já tem uma conta?</span>{' '}
           <Link href="/login" className="text-sky-700 hover:underline">
