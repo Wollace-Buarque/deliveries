@@ -1,10 +1,13 @@
 import { FocusEvent, useState } from 'react'
+import { FieldError } from 'react-hook-form'
+
 import { Label } from '../forms/label'
 import { Input } from '../forms/input'
 import { InputError } from '../forms/input-error'
 import { SignUpSchema } from './signup-form'
-import { FieldError } from 'react-hook-form'
 import { Button } from '../button'
+
+import { fetchAddressByZipCode } from '@/lib/utils'
 
 interface FirstStepProps {
   register: (name: keyof SignUpSchema) => any
@@ -26,20 +29,18 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
     if (cep.length !== 8) return
 
     setIsFetching(true)
-    try {
-      const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
-      const data = await res.json()
 
-      if (setValue && !data.erro) {
-        setValue('street', data.logradouro || '')
-        setValue('neighborhood', data.bairro || '')
-        setValue('city', data.localidade || '')
-        setValue('state', data.uf || '')
-        clearErrors(['street', 'neighborhood', 'city', 'state'])
-      }
-    } finally {
-      setIsFetching(false)
+    const addressData = await fetchAddressByZipCode(cep)
+
+    if (setValue && addressData) {
+      setValue('street', addressData.street)
+      setValue('neighborhood', addressData.neighborhood)
+      setValue('city', addressData.city)
+      setValue('state', addressData.state)
+      clearErrors(['street', 'neighborhood', 'city', 'state'])
     }
+
+    setIsFetching(false)
   }
 
   return (

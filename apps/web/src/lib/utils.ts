@@ -39,4 +39,28 @@ async function handleAddressLookup(params: {
   }
 }
 
-export { cn, handleAddressLookup }
+async function fetchAddressByZipCode(zipCode: string) {
+  try {
+    const res = await fetch(`https://viacep.com.br/ws/${zipCode}/json/`, {
+      next: {
+        revalidate: 60 * 30
+      }
+    })
+
+    if (!res.ok) throw new Error('Failed to fetch address data')
+
+    const data = await res.json()
+    if (data.erro) throw new Error('Invalid ZIP code')
+
+    return {
+      street: data.logradouro || '',
+      neighborhood: data.bairro || '',
+      city: data.localidade || '',
+      state: data.uf || ''
+    }
+  } catch {
+    return null
+  }
+}
+
+export { cn, handleAddressLookup, fetchAddressByZipCode }
