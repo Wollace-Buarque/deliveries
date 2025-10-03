@@ -1,4 +1,6 @@
+import { KeyboardEvent } from 'react'
 import { FieldError } from 'react-hook-form'
+
 import { Input } from '../forms/input'
 import { InputError } from '../forms/input-error'
 import { SignUpSchema } from './signup-form'
@@ -15,6 +17,13 @@ interface FirstStepProps {
 }
 
 export function FirstStep({ register, handleNextStep, isSubmitting, errors }: FirstStepProps) {
+  
+  function handleEnterKeyDown(event: KeyboardEvent) {
+    if (event.key !== 'Enter') return
+
+    handleNextStep()
+  }
+
   return (
     <>
       <div>
@@ -25,7 +34,13 @@ export function FirstStep({ register, handleNextStep, isSubmitting, errors }: Fi
 
       <div>
         <Label htmlFor="password">Senha</Label>
-        <Input type="password" id="password" placeholder="Digite sua senha" {...register('password')} />
+        <Input
+          type="password"
+          id="password"
+          placeholder="Digite sua senha"
+          onKeyDown={handleEnterKeyDown}
+          {...register('password')}
+        />
         <InputError field={errors.password} />
       </div>
 
