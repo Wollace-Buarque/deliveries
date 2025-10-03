@@ -1,2 +1,6 @@
 @import 'tailwindcss';
 @import url(spinner.css);
+
+* {
+  @apply outline-sky-400;
+}
