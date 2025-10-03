@@ -37,7 +37,7 @@ async function signUp(data: SignUpSchema, lat?: string, lng?: string) {
     const { data: responseData } = await api.post('/auth/register', body)
 
     const cookiesStore = await cookies()
-    
+
     cookiesStore.set('token', responseData.data.accessToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
     cookiesStore.set('refreshToken', responseData.data.refreshToken, { secure: true, maxAge: 60 * 60 * 24 * 7 })
 
@@ -85,4 +85,14 @@ async function signIn(data: SignInSchema) {
     return { success: false, message: 'Erro ao fazer login.' }
   }
 }
-export { signUp, signIn }
+
+async function logout() {
+  const cookiesStore = await cookies()
+
+  cookiesStore.delete('token')
+  cookiesStore.delete('refreshToken')
+
+  return { message: 'Você saiu da sua conta.' }
+}
+
+export { signUp, signIn, logout }
