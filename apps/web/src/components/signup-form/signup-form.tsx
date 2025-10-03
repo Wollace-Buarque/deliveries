@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { signUp } from '@/app/actions/auth'
 import { redirect } from 'next/navigation'
 
+import { handleAddressLookup } from '@/lib/utils'
 import { isValidCPF, isPhoneNumberValid, isValidZipCode } from '@/lib/validators'
 
 const signUpSchema = z.object({
@@ -33,11 +34,11 @@ const signUpSchema = z.object({
     .string()
     .min(8, 'O CEP deve ter no mínimo 8 dígitos')
     .refine((value) => isValidZipCode(value), { message: 'CEP inválido' }),
-  street: z.string({ error: 'A rua é obrigatória' }),
-  neighborhood: z.string({ error: 'O bairro é obrigatório' }),
-  city: z.string({ error: 'A cidade é obrigatória' }),
+  street: z.string().min(1, 'A rua é obrigatória'),
+  neighborhood: z.string().min(1, 'O bairro é obrigatório'),
+  city: z.string().min(1, 'A cidade é obrigatória'),
   state: z.string().length(2, 'Estado incorreto'),
-  number: z.string({ error: 'O número é obrigatório' }),
+  number: z.string().min(1, 'O número é obrigatório'),
   complement: z.string().optional()
 })
 
@@ -74,40 +75,6 @@ export function SignUpForm() {
     setStep(SignUpStep.REGISTER)
   }
 
-  async function handleAddressLookup(params: {
-    street: string
-    number: string
-    neighborhood: string
-    city: string
-    state: string
-    zipCode: string
-  }) {
-    const fullAddress = `${params.street}, ${params.number || ''}, ${params.neighborhood}, ${params.city}, ${params.state}, ${params.zipCode}, Brasil`
-
-    let lat = null
-    let lng = null
-
-    try {
-      const geoResponse = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`,
-        {
-          next: {
-            revalidate: 60 * 30
-          }
-        }
-      )
-      const geoResponseData = await geoResponse.json()
-      if (geoResponseData && geoResponseData.length > 0) {
-        lat = geoResponseData[0].lat
-        lng = geoResponseData[0].lon
-      }
-    } catch {
-      toast.error('Erro ao obter coordenadas do endereço. Verifique o endereço e tente novamente.')
-    }
-
-    return { lat, lng }
-  }
-
   async function handleSignUp(data: SignUpSchema) {
     const { lat, lng } = await handleAddressLookup({
       street: data.street,
@@ -117,6 +84,10 @@ export function SignUpForm() {
       state: data.state,
       zipCode: data.zipCode
     })
+
+    if (!lat || !lng) {
+      return toast.error('Erro ao obter coordenadas do endereço. Verifique o endereço e tente novamente.')
+    }
 
     const response = await signUp(data, lat, lng)
     if (!response.success) return toast.error(response.message)
