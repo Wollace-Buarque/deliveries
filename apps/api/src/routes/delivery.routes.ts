@@ -7,6 +7,7 @@ import {
 } from '@deliveries/shared'
 import { z } from 'zod'
 import { authenticate } from '@/middleware/authentication.middleware'
+import { DeliveryStatus } from '@generated/prisma'
 
 export async function deliveryRoutes(fastify: FastifyInstance) {
   // Get all deliveries
@@ -27,14 +28,15 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
       })
 
       const { status, page, limit } = querySchema.parse(request.query)
-
+      const deliveryStatus = status ? status as DeliveryStatus : undefined
+      
       let result
       if (userRole === 'CLIENT') {
-        result = await deliveryService.getDeliveriesByClient(userId, page, limit)
+        result = await deliveryService.getDeliveriesByClient(userId, page, limit, deliveryStatus)
       } else if (userRole === 'DELIVERY') {
-        result = await deliveryService.getDeliveriesByDeliveryPerson(userId, page, limit)
+        result = await deliveryService.getDeliveriesByDeliveryPerson(userId, page, limit, deliveryStatus)
       } else {
-        result = await deliveryService.getDeliveriesByStatus(status!, page, limit)
+        result = await deliveryService.getDeliveriesByStatus(deliveryStatus!, page, limit)
       }
 
       return reply.send(createPaginatedResponse(result.deliveries, page, limit, result.total))

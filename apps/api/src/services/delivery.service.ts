@@ -1,6 +1,6 @@
 import { DeliveryRepository, DeliveryWithDetails } from '../repositories/delivery.repository'
 import { BaseService } from './base.service'
-import { CreateDeliveryDto, UpdateDeliveryDto } from '@deliveries/shared'
+import { CreateDeliveryDto, DeliveryStatus, UpdateDeliveryDto } from '@deliveries/shared'
 import { EventBus } from '../events/event-bus'
 import { DeliveryCreatedEvent } from '../events/delivery-created.event'
 import { DeliveryAcceptedEvent } from '../events/delivery-accepted.event'
@@ -69,14 +69,15 @@ export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeli
   async getDeliveriesByClient(
     clientId: string,
     page = 1,
-    limit = 10
+    limit = 10,
+    status?: DeliveryStatus
   ): Promise<{
     deliveries: DeliveryWithDetails[]
     total: number
   }> {
     const [deliveries, total] = await Promise.all([
-      this.deliveryRepository.findMany({ clientId, page, limit }),
-      this.deliveryRepository.count({ clientId })
+      this.deliveryRepository.findMany({ clientId, page, limit, status }),
+      this.deliveryRepository.count({ clientId, status })
     ])
 
     return { deliveries, total }
@@ -85,14 +86,15 @@ export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeli
   async getDeliveriesByDeliveryPerson(
     deliveryPersonId: string,
     page = 1,
-    limit = 10
+    limit = 10,
+    status?: DeliveryStatus
   ): Promise<{
     deliveries: DeliveryWithDetails[]
     total: number
   }> {
     const [deliveries, total] = await Promise.all([
-      this.deliveryRepository.findMany({ deliveryId: deliveryPersonId, page, limit }),
-      this.deliveryRepository.count({ deliveryId: deliveryPersonId })
+      this.deliveryRepository.findMany({ deliveryId: deliveryPersonId, page, limit, status }),
+      this.deliveryRepository.count({ deliveryId: deliveryPersonId, status })
     ])
 
     return { deliveries, total }
