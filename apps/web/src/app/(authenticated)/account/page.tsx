@@ -1,9 +1,14 @@
+import { Metadata } from 'next'
 import { IconUserCog } from '@tabler/icons-react'
 
 import { Separator } from '@/components/separator'
 import { UpdateProfileForm } from '@/components/update-profile-form/update-profile-form'
 
 import { getProfileData } from '@/app/actions/user'
+
+export const metadata: Metadata = {
+  title: 'Minha conta'
+}
 
 export default async function AccountPage() {
   const profileData = await getProfileData()

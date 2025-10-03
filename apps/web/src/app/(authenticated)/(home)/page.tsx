@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Deliveries - Sistema de Entregas',
+  title: 'Sistema de Entregas',
   description: 'Sistema completo de gerenciamento de entregas',
 }
 
