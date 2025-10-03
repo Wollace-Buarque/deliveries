@@ -1,11 +1,14 @@
 'use client'
 
+import Cookies from 'js-cookie'
 import z from 'zod'
 import Link from 'next/link'
 
+import { toast } from 'sonner'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'sonner'
+import { useEffect } from 'react'
+
 import { signIn } from '@/app/actions/auth'
 import { redirect } from 'next/navigation'
 import { Label } from '../forms/label'
@@ -29,6 +32,14 @@ export function SignInForm() {
     resolver: zodResolver(signInSchema),
     mode: 'onTouched'
   })
+
+  useEffect(() => {
+    const hasDisconnectedBecauseTokenExpired = !!Cookies.get('jwt_expired')
+    if (hasDisconnectedBecauseTokenExpired) {
+      toast.warning('Sua sessão expirou.')
+      Cookies.remove('jwt_expired', { path: '/login' })
+    }
+  }, [])
 
   async function handleSignIn(data: SignInSchema) {
     const response = await signIn(data)

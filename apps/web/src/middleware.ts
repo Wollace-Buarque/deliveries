@@ -31,6 +31,7 @@ export function middleware(request: NextRequest) {
 
     const response = NextResponse.redirect(redirectUrl)
     response.cookies.delete('token')
+    response.cookies.set('jwt_expired', 'true', { path: '/login', maxAge: 60 })
 
     return response
   }
