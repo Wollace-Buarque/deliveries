@@ -80,7 +80,9 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
           <div className="text-lg font-bold">{formatCurrency(delivery.value)}</div>
           <div className="mt-2 text-sm text-gray-600">Estimado: {formatMinutesToDuration(delivery.estimatedTime)}</div>
 
-          {delivery.actualTime && <div className="text-sm text-gray-600">Atual: {delivery.actualTime} min</div>}
+          {delivery.actualTime && status == 'IN_TRANSIT' && (
+            <div className="text-sm text-gray-600">Atual: {delivery.actualTime} min</div>
+          )}
         </div>
       </div>
     </article>
