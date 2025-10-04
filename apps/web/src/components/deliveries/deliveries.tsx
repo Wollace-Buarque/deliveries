@@ -3,6 +3,7 @@ import { IconAlertHexagon } from '@tabler/icons-react'
 
 import { DeliveryCard } from './delivery-card'
 import { ReloadPageButton } from '../reload-page-button'
+import { Pagination } from '../pagination'
 
 interface DeliveriesProps {
   params?: { [key: string]: string | string[] | undefined }
@@ -32,10 +33,16 @@ export async function Deliveries({ params }: DeliveriesProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {deliveries.data.map((delivery) => (
-        <DeliveryCard key={delivery.id} delivery={delivery} />
-      ))}
-    </div>
+    <>
+      <div className="grid grid-cols-2 gap-4">
+        {deliveries.data.map((delivery) => (
+          <DeliveryCard key={delivery.id} delivery={delivery} />
+        ))}
+      </div>
+
+      <div className="mt-4">
+        <Pagination pagination={deliveries.pagination} />
+      </div>
+    </>
   )
 }

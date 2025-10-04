@@ -38,7 +38,7 @@ export type Delivery = {
   destination: Address
 }
 
-type ApiPagination = { page: number; limit: number; total: number; totalPages: number }
+export type ApiPagination = { page: number; limit: number; total: number; totalPages: number }
 
 type GetDeliveriesResponse = {
   success: boolean

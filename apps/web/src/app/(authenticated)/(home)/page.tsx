@@ -5,6 +5,7 @@ import { IconBox } from '@tabler/icons-react'
 import { Separator } from '@/components/separator'
 import { Deliveries } from '@/components/deliveries/deliveries'
 import { DeliveriesSkeleton } from '@/components/deliveries/deliveries-skeleton'
+import { Pagination } from '@/components/pagination'
 
 export const metadata: Metadata = {
   title: 'Sistema de Entregas',
