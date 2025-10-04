@@ -69,6 +69,7 @@ export function SecondStep({ register, setValue, clearErrors, isSubmitting, erro
           type="text"
           id="zipCode"
           placeholder="Digite seu CEP"
+          maxLength={8}
           {...register('zipCode')}
           onBlur={handleCepBlur}
           disabled={isFetching}

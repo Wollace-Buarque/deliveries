@@ -59,6 +59,7 @@ export function SecondStep({
           type="text"
           id="origin.zipCode"
           placeholder="Digite o CEP"
+          maxLength={8}
           {...register('origin.zipCode')}
           onBlur={handleCepBlur}
           disabled={isFetching}

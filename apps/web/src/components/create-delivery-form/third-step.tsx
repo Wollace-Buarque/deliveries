@@ -50,6 +50,7 @@ export function ThirdStep({ register, setValue, clearErrors, isSubmitting, error
           type="text"
           id="destination.zipCode"
           placeholder="Digite o CEP"
+          maxLength={8}
           {...register('destination.zipCode')}
           onBlur={handleCepBlur}
           disabled={isFetching}
