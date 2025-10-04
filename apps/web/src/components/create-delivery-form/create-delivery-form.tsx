@@ -137,7 +137,7 @@ export function CreateDeliveryForm() {
       if (isSameAddress(data.origin, data.destination)) {
         return toast.error('O endereço de origem e destino não podem ser o mesmo.')
       }
-      
+
       const deliveryData = {
         ...data,
         origin: {
@@ -198,15 +198,19 @@ export function CreateDeliveryForm() {
     }
   }
 
-  function isSameAddress(origin: CreateDeliveryFormSchema['origin'], destination: CreateDeliveryFormSchema['destination']) {
-    return origin.street === destination.street &&
+  function isSameAddress(
+    origin: CreateDeliveryFormSchema['origin'],
+    destination: CreateDeliveryFormSchema['destination']
+  ) {
+    return (
+      origin.street === destination.street &&
       origin.number === destination.number &&
       origin.neighborhood === destination.neighborhood &&
       origin.city === destination.city &&
       origin.state === destination.state &&
       origin.zipCode === destination.zipCode
+    )
   }
-  
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>

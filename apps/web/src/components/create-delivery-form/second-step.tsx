@@ -19,14 +19,14 @@ interface SecondStepProps {
   }
 }
 
-export function SecondStep({ 
-  register, 
-  setValue, 
-  clearErrors, 
-  isSubmitting, 
-  errors, 
-  handleBackStep, 
-  handleNextStep 
+export function SecondStep({
+  register,
+  setValue,
+  clearErrors,
+  isSubmitting,
+  errors,
+  handleBackStep,
+  handleNextStep
 }: SecondStepProps) {
   const [isFetching, setIsFetching] = useState(false)
 
@@ -95,12 +95,12 @@ export function SecondStep({
       <div className="grid grid-cols-2 gap-3">
         <div>
           <Label htmlFor="origin.city">Cidade</Label>
-          <Input 
-            type="text" 
-            id="origin.city" 
-            placeholder="Ex: São Paulo" 
-            {...register('origin.city')} 
-            disabled={isFetching} 
+          <Input
+            type="text"
+            id="origin.city"
+            placeholder="Ex: São Paulo"
+            {...register('origin.city')}
+            disabled={isFetching}
           />
           <InputError field={errors?.origin?.city} />
         </div>
@@ -144,20 +144,11 @@ export function SecondStep({
       </div>
 
       <div className="mt-4 flex justify-between gap-2">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={handleBackStep}
-          disabled={isSubmitting}
-        >
+        <Button type="button" variant="outline" onClick={handleBackStep} disabled={isSubmitting}>
           Voltar
         </Button>
 
-        <Button 
-          type="button" 
-          onClick={handleNextStep}
-          disabled={isSubmitting}
-        >
+        <Button type="button" onClick={handleNextStep} disabled={isSubmitting}>
           Continuar
         </Button>
       </div>
