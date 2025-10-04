@@ -4,6 +4,7 @@ import { IconChevronLeft, IconTruckDelivery } from '@tabler/icons-react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { AccountDropdownMenu } from './account-dropdown-menu'
+import { CreateDeliveryForm } from './create-delivery-form/create-delivery-form'
 
 export function Header() {
   const pathname = usePathname()
@@ -29,7 +30,10 @@ export function Header() {
       </div>
 
       <div>
-        <ul className="flex gap-4 align-baseline text-sm *:transition-colors *:hover:text-zinc-800">
+        <ul className="flex items-center gap-4 align-baseline text-sm *:transition-colors *:hover:text-zinc-800">
+          <li>
+            <CreateDeliveryForm />
+          </li>
           <li>
             <AccountDropdownMenu />
           </li>

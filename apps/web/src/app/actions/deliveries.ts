@@ -1,3 +1,5 @@
+'use server'
+
 import { api } from '@/lib/axios'
 import { cookies } from 'next/headers'
 
@@ -78,4 +80,66 @@ async function getDeliveries({
   }
 }
 
-export { getDeliveries }
+type CreateDeliveryRequest = {
+  origin: {
+    street: string
+    number: string
+    complement?: string
+    neighborhood: string
+    city: string
+    state: string
+    zipCode: string
+    coordinates: { lat: number; lng: number }
+  }
+  destination: {
+    street: string
+    number: string
+    complement?: string
+    neighborhood: string
+    city: string
+    state: string
+    zipCode: string
+    coordinates: { lat: number; lng: number }
+  }
+  description: string
+  value: number
+}
+
+type CreateDeliveryResponse = {
+  success: boolean
+  message: string
+  data?: any
+}
+
+async function createDelivery(data: CreateDeliveryRequest): Promise<CreateDeliveryResponse> {
+  try {
+    const cookiesStore = await cookies()
+    const token = cookiesStore.get('token')?.value
+
+    if (!token) {
+      return {
+        success: false,
+        message: 'Ocorreu um erro ao criar a entrega. Por favor, tente realizar o login novamente.'
+      }
+    }
+
+    const { data: response } = await api.post('/deliveries', data, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    return {
+      success: response.success,
+      message: response.message,
+      data: response.data
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Erro interno do servidor'
+    }
+  }
+}
+
+export { getDeliveries, createDelivery }
