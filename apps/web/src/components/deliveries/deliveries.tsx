@@ -1,5 +1,5 @@
 import { getDeliveries } from '@/app/actions/deliveries'
-import { IconAlertHexagon } from '@tabler/icons-react'
+import { IconAlertHexagon, IconMoodEmpty } from '@tabler/icons-react'
 
 import { DeliveryCard } from './delivery-card'
 import { ReloadPageButton } from '../reload-page-button'
@@ -28,6 +28,16 @@ export async function Deliveries({ params }: DeliveriesProps) {
         <p className="text-lg text-red-500">Algo deu errado ao listar suas entregas. Tente atualizar a página.</p>
 
         <ReloadPageButton />
+      </div>
+    )
+  }
+
+  if (!deliveries.data.length) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+        <IconMoodEmpty className="text-zinc-500" size={64} stroke={1} />
+
+        <p className="text-lg text-zinc-500">Você não possui nenhuma entrega no momento.</p>
       </div>
     )
   }
