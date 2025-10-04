@@ -8,22 +8,22 @@ Este é um projeto monorepo para gerenciamento de entregas, composto por:
 
 ## Como rodar o projeto
 
-1. Instale as dependências na pasta raiz:
-   ```sh
-   npm install
-   ```
-2. Configure as variáveis de ambiente conforme o arquivo `env` na pasta api e pasta raiz do projeto.
+1. Instale as dependências na pasta raiz do projeto:
+```sh
+npm install
+```
+2. Configure as variáveis de ambiente conforme o arquivo `env` na pasta `apps/api` e pasta raiz do projeto.
 3.  Na pasta `apps/api`:
-   ```sh
-   npx prisma generate
-   npx prisma migrate dev
-   docker compose up -d
-   ```
-5. Inicie o projeto na pasta raiz:
-   ```sh
-   npm run dev
-   ```
-6. Acesso o front-end na url: http://localhost:3000
+```sh
+npx prisma generate
+npx prisma migrate dev
+docker compose up -d
+```
+4. Inicie o projeto na pasta raiz:
+```sh
+npm run dev
+```
+5. Acesso o front-end na url: http://localhost:3000
 
 ## Postman
 
