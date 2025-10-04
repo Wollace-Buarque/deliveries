@@ -1,5 +1,5 @@
 import { Delivery } from '@/app/actions/deliveries'
-import { cn } from '@/lib/utils'
+import { cn, formatMinutesToDuration } from '@/lib/utils'
 
 const statusObject = {
   PENDING: {
@@ -78,7 +78,7 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
 
         <div className="min-w-36 text-right">
           <div className="text-lg font-bold">{formatCurrency(delivery.value)}</div>
-          <div className="mt-2 text-sm text-gray-600">Estimado: {delivery.estimatedTime} min</div>
+          <div className="mt-2 text-sm text-gray-600">Estimado: {formatMinutesToDuration(delivery.estimatedTime)}</div>
 
           {delivery.actualTime && <div className="text-sm text-gray-600">Atual: {delivery.actualTime} min</div>}
         </div>

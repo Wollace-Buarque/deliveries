@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { z } from 'zod'
 import * as Dialog from '@radix-ui/react-dialog'
 
@@ -53,6 +54,7 @@ export type CreateDeliveryFormSchema = z.infer<typeof createDeliveryFormSchema>
 export function CreateDeliveryForm() {
   const [open, setOpen] = useState(false)
   const [step, setStep] = useState<CreateDeliveryStep>(CreateDeliveryStep.BASIC_INFO)
+  const router = useRouter()
 
   const {
     register,
@@ -149,13 +151,13 @@ export function CreateDeliveryForm() {
       }
 
       const response = await createDelivery(deliveryData)
-      if (!response.success) {
-        return toast.error(response.message)
-      }
+      if (!response.success) return toast.error(response.message)
 
       toast.success('Entrega criada com sucesso!')
       reset()
       setOpen(false)
+
+      router.refresh()
     } catch (error) {
       toast.error('Erro interno do servidor. Tente novamente.')
     }

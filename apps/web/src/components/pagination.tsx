@@ -26,6 +26,8 @@ export function Pagination({ pagination }: PaginationProps) {
     return `${pathname}?${params.toString()}`
   }
 
+  if (pagination.totalPages === 1) return null
+
   return (
     <div className="flex items-center justify-end gap-2">
       {hasBackPage && (
