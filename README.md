@@ -12,16 +12,18 @@ Este é um projeto monorepo para gerenciamento de entregas, composto por:
    ```sh
    npm install
    ```
-2. Configure as variáveis de ambiente conforme o arquivo `env.example` na pasta api.
-3. Suba o container docker:
+2. Configure as variáveis de ambiente conforme o arquivo `env` na pasta api e pasta raiz do projeto.
+3.  Na pasta `apps/api`:
    ```sh
+   npx prisma generate
+   npx prisma migrate dev
    docker compose up -d
    ```
-4. Inicie o projeto na pasta raiz:
+5. Inicie o projeto na pasta raiz:
    ```sh
    npm run dev
    ```
-5. Acesso o front-end na url: http://localhost:3000
+6. Acesso o front-end na url: http://localhost:3000
 
 ## Postman
 
