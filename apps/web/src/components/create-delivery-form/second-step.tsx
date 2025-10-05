@@ -50,7 +50,7 @@ export function SecondStep({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <>
       <div>
         <Label htmlFor="origin.zipCode">CEP</Label>
         <Input
@@ -150,6 +150,6 @@ export function SecondStep({
           Continuar
         </Button>
       </div>
-    </div>
+    </>
   )
 }

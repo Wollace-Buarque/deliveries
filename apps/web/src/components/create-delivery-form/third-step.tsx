@@ -41,7 +41,7 @@ export function ThirdStep({ register, setValue, clearErrors, isSubmitting, error
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <>
       <div>
         <Label htmlFor="destination.zipCode">CEP</Label>
         <Input
@@ -144,6 +144,6 @@ export function ThirdStep({ register, setValue, clearErrors, isSubmitting, error
           {isSubmitting ? 'Criando entrega...' : 'Criar Entrega'}
         </Button>
       </div>
-    </div>
+    </>
   )
 }
