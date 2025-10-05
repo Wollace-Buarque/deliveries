@@ -51,8 +51,6 @@ export function SecondStep({
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-lg font-semibold text-zinc-800">Endereço de Origem</h3>
-
       <div>
         <Label htmlFor="origin.zipCode">CEP</Label>
         <Input

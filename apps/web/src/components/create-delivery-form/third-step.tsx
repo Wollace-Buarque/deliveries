@@ -42,8 +42,6 @@ export function ThirdStep({ register, setValue, clearErrors, isSubmitting, error
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="text-lg font-semibold text-zinc-800">Endereço de Destino</h3>
-
       <div>
         <Label htmlFor="destination.zipCode">CEP</Label>
         <Input
