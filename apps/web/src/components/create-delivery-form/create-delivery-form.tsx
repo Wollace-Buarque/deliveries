@@ -225,7 +225,7 @@ export function CreateDeliveryForm() {
           <div className="mb-6 flex items-start justify-between">
             <div>
               <Dialog.Title className="text-xl font-semibold text-zinc-800">{getStepTitle()}</Dialog.Title>
-              <p className="mt-1 text-sm text-zinc-600">{getStepDescription()}</p>
+              <Dialog.Description className="mt-1 text-sm text-zinc-600">{getStepDescription()}</Dialog.Description>
             </div>
 
             <Dialog.Close asChild>
