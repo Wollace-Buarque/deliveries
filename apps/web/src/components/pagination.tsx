@@ -18,12 +18,15 @@ export function Pagination({ pagination }: PaginationProps) {
   const hasBackPage = pagination.page > 1
   const hasNextPage = pagination.page < pagination.totalPages
 
-  function createPageURL(pageNumber: number | string) {
+  function createPageURL(pageNumber: number) {
     const params = new URLSearchParams(searchParams)
     params.set('page', pageNumber.toString())
     params.set('limit', pagination.limit.toString())
 
-    return `${pathname}?${params.toString()}`
+    return {
+      pathname,
+      search: params.toString()
+    }
   }
 
   if (pagination.totalPages === 1) return null
