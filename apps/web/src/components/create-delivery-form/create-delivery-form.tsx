@@ -154,8 +154,8 @@ export function CreateDeliveryForm() {
       if (!response.success) return toast.error(response.message)
 
       toast.success('Entrega criada com sucesso!')
-      reset()
-      setOpen(false)
+      
+      handleOpenChange(false)
 
       router.refresh()
     } catch (error) {
@@ -271,7 +271,7 @@ export function CreateDeliveryForm() {
             </div>
 
             {step === CreateDeliveryStep.BASIC_INFO && (
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end">
                 <Dialog.Close asChild>
                   <Button type="button" variant="outline">
                     Cancelar
