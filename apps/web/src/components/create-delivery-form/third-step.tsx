@@ -6,16 +6,16 @@ import { InputError } from '../forms/input-error'
 import { Button } from '../button'
 
 import { fetchAddressByZipCode } from '@/lib/utils'
+import { UseFormClearErrors, UseFormRegister, FieldPath, FieldErrors } from 'react-hook-form'
+import { CreateDeliveryFormSchema } from './create-delivery-form'
 
 interface ThirdStepProps {
-  register: (name: any) => any
-  setValue: (name: any, value: any) => void
-  clearErrors: (name: any[]) => void
+  register: UseFormRegister<CreateDeliveryFormSchema>
+  setValue: (name: FieldPath<CreateDeliveryFormSchema>, value: unknown) => void
+  clearErrors: UseFormClearErrors<CreateDeliveryFormSchema>
   handleBackStep: () => void
   isSubmitting: boolean
-  errors: {
-    [key: string]: any
-  }
+  errors: FieldErrors<CreateDeliveryFormSchema>
 }
 
 export function ThirdStep({ register, setValue, clearErrors, isSubmitting, errors, handleBackStep }: ThirdStepProps) {

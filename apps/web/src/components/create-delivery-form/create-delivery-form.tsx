@@ -248,8 +248,8 @@ export function CreateDeliveryForm() {
 
               {step === CreateDeliveryStep.ORIGIN_ADDRESS && (
                 <SecondStep
-                  register={register}
-                  errors={errors}
+                  register={register as any}
+                  errors={errors as any}
                   isSubmitting={isSubmitting}
                   handleBackStep={handleBackStep}
                   handleNextStep={handleNextStep}
@@ -260,8 +260,8 @@ export function CreateDeliveryForm() {
 
               {step === CreateDeliveryStep.DESTINATION_ADDRESS && (
                 <ThirdStep
-                  register={register}
-                  errors={errors}
+                  register={register as any}
+                  errors={errors as any}
                   isSubmitting={isSubmitting}
                   handleBackStep={handleBackStep}
                   setValue={setValue}

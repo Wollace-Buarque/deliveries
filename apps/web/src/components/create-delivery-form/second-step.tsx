@@ -6,17 +6,17 @@ import { InputError } from '../forms/input-error'
 import { Button } from '../button'
 
 import { fetchAddressByZipCode } from '@/lib/utils'
+import { FieldErrors, FieldPath, UseFormClearErrors, UseFormRegister } from 'react-hook-form'
+import { CreateDeliveryFormSchema } from './create-delivery-form'
 
 interface SecondStepProps {
-  register: (name: any) => any
-  setValue: (name: any, value: any) => void
-  clearErrors: (name: any[]) => void
+  register: UseFormRegister<CreateDeliveryFormSchema>
+  setValue: (name: FieldPath<CreateDeliveryFormSchema>, value: unknown) => void
+  clearErrors: UseFormClearErrors<CreateDeliveryFormSchema>
   handleBackStep: () => void
   handleNextStep: () => Promise<void>
   isSubmitting: boolean
-  errors: {
-    [key: string]: any
-  }
+  errors: FieldErrors<CreateDeliveryFormSchema>
 }
 
 export function SecondStep({
