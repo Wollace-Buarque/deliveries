@@ -278,4 +278,111 @@ export class DeliveryRepository extends BaseRepository<DeliveryWithDetails, Crea
       actualTime
     })
   }
+
+  // Metrics methods
+  async getTotalEarnings(deliveryPersonId: string, startDate?: Date, endDate?: Date): Promise<number> {
+    const result = await this.prisma.delivery.aggregate({
+      where: {
+        deliveryId: deliveryPersonId,
+        status: 'DELIVERED',
+        ...(startDate && endDate && {
+          createdAt: {
+            gte: startDate,
+            lte: endDate
+          }
+        })
+      },
+      _sum: {
+        value: true
+      }
+    })
+
+    return result._sum.value || 0
+  }
+
+  async getAverageDeliveryTime(deliveryPersonId: string): Promise<number> {
+    const result = await this.prisma.delivery.aggregate({
+      where: {
+        deliveryId: deliveryPersonId,
+        status: 'DELIVERED',
+        actualTime: {
+          not: null
+        }
+      },
+      _avg: {
+        actualTime: true
+      }
+    })
+
+    return result._avg.actualTime || 0
+  }
+
+  async getOnTimeDeliveryRate(deliveryPersonId: string): Promise<{ onTime: number; total: number }> {
+    const allDelivered = await this.prisma.delivery.findMany({
+      where: {
+        deliveryId: deliveryPersonId,
+        status: 'DELIVERED',
+        actualTime: {
+          not: null
+        }
+      },
+      select: {
+        actualTime: true,
+        estimatedTime: true
+      }
+    })
+
+    const onTimeDeliveries = allDelivered.filter(
+      delivery => delivery.actualTime! <= delivery.estimatedTime
+    ).length
+
+    return {
+      onTime: onTimeDeliveries,
+      total: allDelivered.length
+    }
+  }
+
+  async getDeliveriesByPeriod(
+    deliveryPersonId: string,
+    startDate: Date,
+    endDate: Date
+  ): Promise<DeliveryWithDetails[]> {
+    return this.prisma.delivery.findMany({
+      where: {
+        deliveryId: deliveryPersonId,
+        createdAt: {
+          gte: startDate,
+          lte: endDate
+        }
+      },
+      include: {
+        client: {
+          select: {
+            id: true,
+            email: true,
+            profile: {
+              select: {
+                name: true,
+                phone: true
+              }
+            }
+          }
+        },
+        deliveryPerson: {
+          select: {
+            id: true,
+            email: true,
+            profile: {
+              select: {
+                name: true,
+                phone: true
+              }
+            }
+          }
+        },
+        origin: true,
+        destination: true
+      }
+    })
+  }
 }

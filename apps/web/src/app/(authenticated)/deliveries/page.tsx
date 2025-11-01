@@ -7,6 +7,7 @@ import { Separator } from '@/components/separator'
 import { MyDeliveries } from '@/components/delivery-management/my-deliveries'
 import { AvailableDeliveries } from '@/components/delivery-management/available-deliveries'
 import { DeliveriesSkeleton } from '@/components/deliveries/deliveries-skeleton'
+import { DeliveryStatsDashboard } from '@/components/delivery-management/delivery-stats-dashboard'
 import { getUserRole } from '@/app/actions/user'
 
 export const metadata: Metadata = {
@@ -30,6 +31,10 @@ export default async function DeliveryManagementPage({
 
   return (
     <main className="container mx-auto flex flex-1 flex-col p-12">
+      <Suspense fallback={<div className="mb-8 h-96 animate-pulse rounded-lg bg-zinc-100"></div>}>
+        <DeliveryStatsDashboard />
+      </Suspense>
+
       <div className="flex items-end gap-4">
         <IconTruckDelivery size={96} stroke={1} className="text-zinc-400" />
 

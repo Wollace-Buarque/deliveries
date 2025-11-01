@@ -219,6 +219,27 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
     }
   )
 
+  // Get delivery person statistics
+  fastify.get(
+    '/my-stats',
+    {
+      preHandler: [authenticate]
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const userRole = (request.user as any).role
+      if (userRole !== 'DELIVERY') {
+        return reply.status(403).send(createApiResponse({ success: false, error: 'Only delivery persons can access their stats' }))
+      }
+
+      const deliveryService = fastify.deliveryService
+      const userId = (request.user as any).userId
+
+      const stats = await deliveryService.getDeliveryPersonStats(userId)
+
+      return reply.send(createApiResponse({ success: true, data: stats, message: 'Statistics retrieved successfully' }))
+    }
+  )
+
   // Get delivery statistics (Admin only)
   fastify.get(
     '/stats',

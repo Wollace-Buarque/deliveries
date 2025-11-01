@@ -6,6 +6,17 @@ import { DeliveryCreatedEvent } from '../events/delivery-created.event'
 import { DeliveryAcceptedEvent } from '../events/delivery-accepted.event'
 import { DeliveryStatusChangedEvent } from '../events/delivery-status-changed.event'
 import { calculateDistance, calculateEstimatedTime } from '@deliveries/shared'
+import { 
+  startOfDay, 
+  startOfWeek, 
+  endOfWeek, 
+  startOfMonth, 
+  endOfMonth, 
+  subWeeks, 
+  subMonths,
+  getDaysInMonth,
+  getDate
+} from 'date-fns'
 
 export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeliveryDto, UpdateDeliveryDto> {
   constructor(
@@ -152,6 +163,132 @@ export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeli
       inProgress,
       completed,
       cancelled
+    }
+  }
+
+  async getDeliveryPersonStats(deliveryPersonId: string): Promise<{
+    overview: {
+      totalDeliveries: number
+      completedDeliveries: number
+      cancelledDeliveries: number
+      activeDeliveries: number
+      successRate: number
+    }
+    earnings: {
+      total: number
+      today: number
+      thisWeek: number
+      thisMonth: number
+      lastMonth: number
+      projectedMonthly: number
+    }
+    performance: {
+      averageDeliveryTime: number
+      onTimeRate: number
+      totalOnTime: number
+      totalDelivered: number
+    }
+    trends: {
+      deliveriesThisWeek: number
+      deliveriesLastWeek: number
+      weeklyGrowth: number
+      deliveriesThisMonth: number
+      deliveriesLastMonth: number
+      monthlyGrowth: number
+    }
+  }> {
+    const now = new Date()
+    
+    const todayStart = startOfDay(now)
+    const weekStart = startOfWeek(now, { weekStartsOn: 0 })
+    const monthStart = startOfMonth(now)
+    
+    const lastMonthStart = startOfMonth(subMonths(now, 1))
+    const lastMonthEnd = endOfMonth(subMonths(now, 1))
+    
+    const lastWeekStart = startOfWeek(subWeeks(now, 1), { weekStartsOn: 0 })
+    const lastWeekEnd = endOfWeek(subWeeks(now, 1), { weekStartsOn: 0 })
+
+    const [totalDeliveries, completedDeliveries, cancelledDeliveries, activeDeliveries] = await Promise.all([
+      this.deliveryRepository.count({ deliveryId: deliveryPersonId }),
+      this.deliveryRepository.count({ deliveryId: deliveryPersonId, status: 'DELIVERED' }),
+      this.deliveryRepository.count({ deliveryId: deliveryPersonId, status: 'CANCELLED' }),
+      Promise.all([
+        this.deliveryRepository.count({ deliveryId: deliveryPersonId, status: 'ACCEPTED' }),
+        this.deliveryRepository.count({ deliveryId: deliveryPersonId, status: 'PICKED_UP' }),
+        this.deliveryRepository.count({ deliveryId: deliveryPersonId, status: 'IN_TRANSIT' })
+      ]).then(([accepted, pickedUp, inTransit]) => accepted + pickedUp + inTransit)
+    ])
+
+    const successRate = totalDeliveries > 0 
+      ? (completedDeliveries / totalDeliveries) * 100 
+      : 0
+
+    const [totalEarnings, todayEarnings, weekEarnings, monthEarnings, lastMonthEarnings] = await Promise.all([
+      this.deliveryRepository.getTotalEarnings(deliveryPersonId),
+      this.deliveryRepository.getTotalEarnings(deliveryPersonId, todayStart, now),
+      this.deliveryRepository.getTotalEarnings(deliveryPersonId, weekStart, now),
+      this.deliveryRepository.getTotalEarnings(deliveryPersonId, monthStart, now),
+      this.deliveryRepository.getTotalEarnings(deliveryPersonId, lastMonthStart, lastMonthEnd)
+    ])
+
+    const daysInMonth = getDaysInMonth(now)
+    const currentDay = getDate(now)
+    const projectedMonthly = currentDay > 0 
+      ? (monthEarnings / currentDay) * daysInMonth 
+      : 0
+
+    const averageDeliveryTime = await this.deliveryRepository.getAverageDeliveryTime(deliveryPersonId)
+    const onTimeData = await this.deliveryRepository.getOnTimeDeliveryRate(deliveryPersonId)
+    const onTimeRate = onTimeData.total > 0 
+      ? (onTimeData.onTime / onTimeData.total) * 100 
+      : 0
+
+    const [thisWeekDeliveries, lastWeekDeliveries, thisMonthDeliveries, lastMonthDeliveries] = await Promise.all([
+      (await this.deliveryRepository.getDeliveriesByPeriod(deliveryPersonId, weekStart, now)).length,
+      (await this.deliveryRepository.getDeliveriesByPeriod(deliveryPersonId, lastWeekStart, lastWeekEnd)).length,
+      (await this.deliveryRepository.getDeliveriesByPeriod(deliveryPersonId, monthStart, now)).length,
+      (await this.deliveryRepository.getDeliveriesByPeriod(deliveryPersonId, lastMonthStart, lastMonthEnd)).length
+    ])
+
+    const weeklyGrowth = lastWeekDeliveries > 0 
+      ? ((thisWeekDeliveries - lastWeekDeliveries) / lastWeekDeliveries) * 100 
+      : thisWeekDeliveries > 0 ? 100 : 0
+
+    const monthlyGrowth = lastMonthDeliveries > 0 
+      ? ((thisMonthDeliveries - lastMonthDeliveries) / lastMonthDeliveries) * 100 
+      : thisMonthDeliveries > 0 ? 100 : 0
+
+    return {
+      overview: {
+        totalDeliveries,
+        completedDeliveries,
+        cancelledDeliveries,
+        activeDeliveries,
+        successRate: Math.round(successRate * 10) / 10
+      },
+      earnings: {
+        total: Math.round(totalEarnings * 100) / 100,
+        today: Math.round(todayEarnings * 100) / 100,
+        thisWeek: Math.round(weekEarnings * 100) / 100,
+        thisMonth: Math.round(monthEarnings * 100) / 100,
+        lastMonth: Math.round(lastMonthEarnings * 100) / 100,
+        projectedMonthly: Math.round(projectedMonthly * 100) / 100
+      },
+      performance: {
+        averageDeliveryTime: Math.round(averageDeliveryTime * 10) / 10,
+        onTimeRate: Math.round(onTimeRate * 10) / 10,
+        totalOnTime: onTimeData.onTime,
+        totalDelivered: onTimeData.total
+      },
+      trends: {
+        deliveriesThisWeek: thisWeekDeliveries,
+        deliveriesLastWeek: lastWeekDeliveries,
+        weeklyGrowth: Math.round(weeklyGrowth * 10) / 10,
+        deliveriesThisMonth: thisMonthDeliveries,
+        deliveriesLastMonth: lastMonthDeliveries,
+        monthlyGrowth: Math.round(monthlyGrowth * 10) / 10
+      }
     }
   }
 }
