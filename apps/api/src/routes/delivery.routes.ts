@@ -104,6 +104,48 @@ export async function deliveryRoutes(fastify: FastifyInstance) {
     }
   )
 
+  // Accept delivery (for delivery persons)
+  fastify.post(
+    '/:id/accept',
+    {
+      preHandler: [authenticate]
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const userRole = (request.user as any).role
+      if (userRole !== 'DELIVERY') {
+        return reply.status(403).send(createApiResponse({ success: false, error: 'Only delivery persons can accept deliveries' }))
+      }
+
+      const deliveryService = fastify.deliveryService
+      const userId = (request.user as any).userId
+
+      const paramsSchema = z.object({
+        id: z.cuid('Invalid delivery ID')
+      })
+
+      const { id } = paramsSchema.parse(request.params)
+
+      const delivery = await deliveryService.findById(id)
+      if (!delivery) {
+        return reply.status(404).send(createApiResponse({ success: false, error: 'Delivery not found' }))
+      }
+
+      if (delivery.status !== 'PENDING') {
+        return reply.status(400).send(createApiResponse({ success: false, error: 'Delivery is not available' }))
+      }
+
+      if (delivery.deliveryId) {
+        return reply.status(400).send(createApiResponse({ success: false, error: 'Delivery already accepted' }))
+      }
+
+      const acceptedDelivery = await deliveryService.acceptDelivery(id, userId)
+
+      return reply.send(
+        createApiResponse({ success: true, data: acceptedDelivery, message: 'Delivery accepted successfully' })
+      )
+    }
+  )
+
   // Get delivery by ID
   fastify.get(
     '/:id',
