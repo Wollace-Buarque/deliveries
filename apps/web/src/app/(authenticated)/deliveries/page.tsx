@@ -1,13 +1,11 @@
 import { Metadata } from 'next'
-import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { IconTruckDelivery, IconPackage } from '@tabler/icons-react'
 
 import { Separator } from '@/components/separator'
-import { MyDeliveries } from '@/components/delivery-management/my-deliveries'
-import { AvailableDeliveries } from '@/components/delivery-management/available-deliveries'
-import { DeliveriesSkeleton } from '@/components/deliveries/deliveries-skeleton'
-import { DeliveryStatsDashboard } from '@/components/delivery-management/delivery-stats-dashboard'
+import { MyDeliveriesQuery } from '@/components/delivery-management/my-deliveries-query'
+import { AvailableDeliveriesQuery } from '@/components/delivery-management/available-deliveries-query'
+import { DeliveryStatsQuery } from '@/components/delivery-management/delivery-stats-query'
 import { getUserRole } from '@/app/actions/user'
 
 export const metadata: Metadata = {
@@ -28,12 +26,12 @@ export default async function DeliveryManagementPage({
   }
 
   const params = await searchParams
+  const myPage = params?.myPage ? Number(params.myPage) : 1
+  const availablePage = params?.availablePage ? Number(params.availablePage) : 1
 
   return (
     <main className="container mx-auto flex flex-1 flex-col p-12">
-      <Suspense fallback={<div className="mb-8 h-96 animate-pulse rounded-lg bg-zinc-100"></div>}>
-        <DeliveryStatsDashboard />
-      </Suspense>
+      <DeliveryStatsQuery />
 
       <div className="flex items-end gap-4">
         <IconTruckDelivery size={96} stroke={1} className="text-zinc-400" />
@@ -46,29 +44,24 @@ export default async function DeliveryManagementPage({
 
       <Separator />
 
-      <div className="flex flex-1 flex-col mb-12">
-        <Suspense fallback={<DeliveriesSkeleton />}>
-          <MyDeliveries params={params} />
-        </Suspense>
+      <div className="mb-12 flex flex-1 flex-col">
+        <MyDeliveriesQuery initialPage={myPage} />
       </div>
 
-      <div className="flex items-end gap-4 mt-8">
+      <div className="mt-8 flex items-end gap-4">
         <IconPackage size={96} stroke={1} className="text-zinc-400" />
 
         <div>
           <h2 className="text-3xl font-semibold">Entregas Disponíveis</h2>
-          <p className="mt-2 text-zinc-600">Aceite novas entregas para realizar</p>
+          <p className="mt-2 text-zinc-600">Aceite novas entregas para realizar • Atualização automática a cada 15s</p>
         </div>
       </div>
 
       <Separator />
 
       <div className="flex flex-1 flex-col">
-        <Suspense fallback={<DeliveriesSkeleton />}>
-          <AvailableDeliveries params={params} />
-        </Suspense>
+        <AvailableDeliveriesQuery initialPage={availablePage} />
       </div>
     </main>
   )
 }
-

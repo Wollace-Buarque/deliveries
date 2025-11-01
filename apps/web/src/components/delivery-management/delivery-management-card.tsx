@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
-import { Delivery, updateDeliveryStatus, acceptDelivery } from '@/app/actions/deliveries'
+import { Delivery } from '@/app/actions/deliveries'
+import { useAcceptDelivery, useUpdateDeliveryStatus } from '@/hooks/use-deliveries'
 import { cn, formatMinutesToDuration } from '@/lib/utils'
 import { Button } from '@/components/button'
 
@@ -11,25 +10,25 @@ const statusObject = {
   PENDING: {
     translation: 'Pendente',
     className: 'bg-orange-50 text-orange-700',
-    nextStatus: 'ACCEPTED' as const,
+    nextStatus: 'ACCEPTED',
     nextStatusLabel: 'Aceitar Entrega'
   },
   ACCEPTED: {
     translation: 'Aceito',
     className: 'bg-green-50 text-green-700',
-    nextStatus: 'PICKED_UP' as const,
+    nextStatus: 'PICKED_UP',
     nextStatusLabel: 'Marcar como Coletado'
   },
   PICKED_UP: {
     translation: 'Coletado',
     className: 'bg-blue-50 text-blue-700',
-    nextStatus: 'IN_TRANSIT' as const,
+    nextStatus: 'IN_TRANSIT',
     nextStatusLabel: 'Iniciar Transporte'
   },
   IN_TRANSIT: {
     translation: 'Em Trânsito',
     className: 'bg-violet-50 text-violet-700',
-    nextStatus: 'DELIVERED' as const,
+    nextStatus: 'DELIVERED',
     nextStatusLabel: 'Marcar como Entregue'
   },
   DELIVERED: {
@@ -58,51 +57,49 @@ interface DeliveryManagementCardProps {
 }
 
 export function DeliveryManagementCard({ delivery, isAvailable = false }: DeliveryManagementCardProps) {
-  const router = useRouter()
-
-  const [isLoading, setIsLoading] = useState(false)
-  
   const status = delivery.status as StatusKey
   const parsedStatus = statusObject[status]
 
+  const acceptMutation = useAcceptDelivery()
+  const updateStatusMutation = useUpdateDeliveryStatus()
+
+  const isLoading = acceptMutation.isPending || updateStatusMutation.isPending
+
   async function handleAcceptDelivery() {
-    setIsLoading(true)
+    acceptMutation.mutate(delivery.id, {
+      onSuccess: (response) => {
+        if (!response.success) {
+          toast.error(response.message)
+          return
+        }
 
-    try {
-      const response = await acceptDelivery(delivery.id)
-
-      if (!response.success) {
-        toast.error(response.message)
-        return
+        toast.success('Entrega aceita com sucesso!')
+      },
+      onError: () => {
+        toast.error('Erro ao aceitar entrega')
       }
-
-      toast.success('Entrega aceita com sucesso!')
-      router.refresh()
-    } catch (error) {
-      toast.error('Erro ao aceitar entrega')
-    } finally {
-      setIsLoading(false)
-    }
+    })
   }
 
-  async function handleStatusUpdate(newStatus: string) {
-    setIsLoading(true)
-
-    try {
-      const response = await updateDeliveryStatus(delivery.id, newStatus as any)
-
-      if (!response.success) {
-        toast.error(response.message)
-        return
+  async function handleStatusUpdate(newStatus: StatusKey) {
+    updateStatusMutation.mutate(
+      {
+        deliveryId: delivery.id,
+        status: newStatus
+      },
+      {
+        onSuccess: (response) => {
+          if (!response.success) {
+            toast.error(response.message)
+            return
+          }
+          toast.success('Status atualizado com sucesso!')
+        },
+        onError: () => {
+          toast.error('Erro ao atualizar status')
+        }
       }
-
-      toast.success('Status atualizado com sucesso!')
-      router.refresh()
-    } catch (error) {
-      toast.error('Erro ao atualizar status')
-    } finally {
-      setIsLoading(false)
-    }
+    )
   }
 
   const canUpdateStatus = parsedStatus.nextStatus !== null && !isAvailable
