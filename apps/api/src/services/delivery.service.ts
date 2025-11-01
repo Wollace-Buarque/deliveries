@@ -15,7 +15,8 @@ import {
   subWeeks, 
   subMonths,
   getDaysInMonth,
-  getDate
+  getDate,
+  differenceInMinutes
 } from 'date-fns'
 
 export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeliveryDto, UpdateDeliveryDto> {
@@ -67,7 +68,14 @@ export class DeliveryService extends BaseService<DeliveryWithDetails, CreateDeli
       throw new Error('Delivery not found')
     }
 
-    const delivery = await this.deliveryRepository.updateStatus(deliveryId, status as any, actualTime)
+    let calculatedActualTime = actualTime
+    if (status === 'DELIVERED' && !actualTime) {
+      const now = new Date()
+      const createdAt = new Date(oldDelivery.createdAt)
+      calculatedActualTime = differenceInMinutes(now, createdAt)
+    }
+
+    const delivery = await this.deliveryRepository.updateStatus(deliveryId, status as any, calculatedActualTime)
 
     // Emit status changed event
     await this.eventBus.emit(
