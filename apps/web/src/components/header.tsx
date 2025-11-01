@@ -1,16 +1,22 @@
 'use client'
 
+import Link from 'next/link'
 import { IconChevronLeft, IconTruckDelivery } from '@tabler/icons-react'
 import { usePathname, useRouter } from 'next/navigation'
 
 import { AccountDropdownMenu } from './account-dropdown-menu'
 import { CreateDeliveryForm } from './create-delivery-form/create-delivery-form'
 
-export function Header() {
+interface HeaderProps {
+  userRole: 'CLIENT' | 'DELIVERY' | 'ADMIN' | null
+}
+
+export function Header({ userRole }: HeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
 
   const shouldShowBackButton = pathname !== '/'
+  const isDeliveryPerson = userRole === 'DELIVERY'
 
   function handleGoBack() {
     router.back()
@@ -29,16 +35,30 @@ export function Header() {
         <IconTruckDelivery />
       </div>
 
-      <div>
+      <nav>
         <ul className="flex items-center gap-4 align-baseline text-sm *:transition-colors *:hover:text-zinc-800">
           <li>
-            <CreateDeliveryForm />
+            <Link href="/" className="font-medium">
+              Início
+            </Link>
           </li>
+          {isDeliveryPerson && (
+            <li>
+              <Link href="/deliveries" className="font-medium">
+                Gerenciar Entregas
+              </Link>
+            </li>
+          )}
+          {!isDeliveryPerson && (
+            <li>
+              <CreateDeliveryForm />
+            </li>
+          )}
           <li>
             <AccountDropdownMenu />
           </li>
         </ul>
-      </div>
+      </nav>
     </header>
   )
 }

@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+import { jwtDecode } from 'jwt-decode'
 import { api } from '@/lib/axios'
 
 import { UpdateProfileData } from '@/components/update-profile-form/update-profile-form'
@@ -113,4 +114,20 @@ async function updateProfile(data: UpdateProfileData, lat: string, lng: string) 
   }
 }
 
-export { getProfileData, updateProfile }
+async function getUserRole(): Promise<'CLIENT' | 'DELIVERY' | 'ADMIN' | null> {
+  const cookiesStore = await cookies()
+  const token = cookiesStore.get('token')?.value
+
+  if (!token) {
+    return null
+  }
+
+  try {
+    const decoded = jwtDecode<{ role: 'CLIENT' | 'DELIVERY' | 'ADMIN' }>(token)
+    return decoded.role
+  } catch (error) {
+    return null
+  }
+}
+
+export { getProfileData, updateProfile, getUserRole }
