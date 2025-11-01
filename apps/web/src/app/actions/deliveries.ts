@@ -142,4 +142,125 @@ async function createDelivery(data: CreateDeliveryRequest): Promise<CreateDelive
   }
 }
 
-export { getDeliveries, createDelivery }
+type GetAvailableDeliveriesResponse = {
+  success: boolean
+  data: Delivery[]
+  pagination: ApiPagination
+}
+
+async function getAvailableDeliveries({
+  page = 1,
+  limit = 10
+}: {
+  page?: number
+  limit?: number
+}): Promise<GetAvailableDeliveriesResponse> {
+  const cookiesStore = await cookies()
+  const token = cookiesStore.get('token')?.value
+
+  const params = {
+    page,
+    limit
+  }
+
+  const { data } = await api.get('/deliveries/available', {
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  return {
+    success: data.success,
+    data: data.data,
+    pagination: data.pagination
+  }
+}
+
+type UpdateDeliveryStatusResponse = {
+  success: boolean
+  message: string
+  data?: any
+}
+
+async function updateDeliveryStatus(
+  deliveryId: string,
+  status: 'PENDING' | 'ACCEPTED' | 'PICKED_UP' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED',
+  actualTime?: number
+): Promise<UpdateDeliveryStatusResponse> {
+  try {
+    const cookiesStore = await cookies()
+    const token = cookiesStore.get('token')?.value
+
+    if (!token) {
+      return {
+        success: false,
+        message: 'Ocorreu um erro ao atualizar o status. Por favor, tente realizar o login novamente.'
+      }
+    }
+
+    const { data: response } = await api.put(
+      `/deliveries/${deliveryId}/status`,
+      { status, actualTime },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    return {
+      success: response.success,
+      message: response.message,
+      data: response.data
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Erro interno do servidor'
+    }
+  }
+}
+
+type AcceptDeliveryResponse = {
+  success: boolean
+  message: string
+  data?: any
+}
+
+async function acceptDelivery(deliveryId: string): Promise<AcceptDeliveryResponse> {
+  try {
+    const cookiesStore = await cookies()
+    const token = cookiesStore.get('token')?.value
+
+    if (!token) {
+      return {
+        success: false,
+        message: 'Ocorreu um erro ao aceitar a entrega. Por favor, tente realizar o login novamente.'
+      }
+    }
+
+    const { data: response } = await api.post(
+      `/deliveries/${deliveryId}/accept`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    return {
+      success: response.success,
+      message: response.message,
+      data: response.data
+    }
+  } catch (error) {
+    return {
+      success: false,
+      message: 'Erro interno do servidor'
+    }
+  }
+}
+
+export { getDeliveries, createDelivery, getAvailableDeliveries, updateDeliveryStatus, acceptDelivery }

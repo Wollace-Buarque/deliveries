@@ -9,9 +9,10 @@ import Link from 'next/link'
 
 interface PaginationProps {
   pagination: ApiPagination
+  pageParam?: string
 }
 
-export function Pagination({ pagination }: PaginationProps) {
+export function Pagination({ pagination, pageParam = 'page' }: PaginationProps) {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -20,7 +21,7 @@ export function Pagination({ pagination }: PaginationProps) {
 
   function createPageURL(pageNumber: number) {
     const params = new URLSearchParams(searchParams)
-    params.set('page', pageNumber.toString())
+    params.set(pageParam, pageNumber.toString())
     params.set('limit', pagination.limit.toString())
 
     return {
