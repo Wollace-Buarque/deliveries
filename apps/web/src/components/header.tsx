@@ -23,7 +23,7 @@ export function Header({ userRole }: HeaderProps) {
   }
 
   return (
-    <header className="flex items-center justify-between border border-b-zinc-300 p-5">
+    <header className="flex items-center justify-between border-b border-b-zinc-300 p-5">
       <div className="flex items-center gap-1">
         {shouldShowBackButton && (
           <button onClick={handleGoBack} className="cursor-pointer transition-transform hover:scale-125">
