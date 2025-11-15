@@ -4,15 +4,10 @@ networks:
 
 services:
   postgres:
-    image: 'bitnami/postgresql:latest'
+    image: 'postgres:latest'
     environment:
-      - POSTGRESQL_USERNAME=docker
-      - POSTGRESQL_PASSWORD=docker
-      - POSTGRESQL_DATABASE=development
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=development
     ports:
       - '5432:5432'
-    volumes:
-      - postgres_data:/bitnami/postgresql
-
-volumes:
-  postgres_data:
