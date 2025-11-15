@@ -1,3 +1,5 @@
+import { calculateDistancesGPU } from './distance-gpu'
+
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number): number => {
   const R = 6371 // Earth's radius in kilometers
   const dLat = (lat2 - lat1) * (Math.PI / 180)
@@ -50,6 +52,7 @@ const createPaginatedResponse = <T>(data: T[], page: number, limit: number, tota
 export {
   calculateDistance,
   calculateEstimatedTime,
+  calculateDistancesGPU,
   createApiResponse,
   createPaginatedResponse
 };

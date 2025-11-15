@@ -9,6 +9,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "gpu.js": "^2.16.0",
     "zod": "^4.1.11"
   },
   "devDependencies": {

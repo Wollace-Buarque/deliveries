@@ -31,6 +31,7 @@ export {
 export {
 	calculateDistance,
 	calculateEstimatedTime,
+	calculateDistancesGPU,
 	createApiResponse,
 	createPaginatedResponse
 } from './utils';
