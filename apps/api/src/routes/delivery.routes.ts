@@ -3,13 +3,58 @@ import {
   createApiResponse,
   createPaginatedResponse,
   createDeliverySchema,
-  updateDeliveryStatusSchema
+  updateDeliveryStatusSchema,
+  calculateDistancesGPU
 } from '@deliveries/shared'
 import { z } from 'zod'
 import { authenticate } from '@/middleware/authentication.middleware'
 import { DeliveryStatus } from '@generated/prisma'
 
 export async function deliveryRoutes(fastify: FastifyInstance) {
+  // Matriz de distâncias entre entregas disponíveis (para entregadores)
+  fastify.get(
+    '/available/distances',
+    {
+      preHandler: [authenticate]
+    },
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      const userRole = (request.user as any).role
+      if (userRole !== 'DELIVERY') {
+        return reply.status(403).send(createApiResponse({ success: false, error: 'Forbidden' }))
+      }
+
+      const deliveryService = fastify.deliveryService
+      const userId = (request.user as any).userId
+
+      const { deliveries } = await deliveryService.getDeliveriesByDeliveryPerson(userId,1, 100)
+
+      const addressesRaw = deliveries?.map(d => ({
+        id: d.id,
+        street: d.origin.street,
+        number: d.origin.number,
+        neighborhood: d.origin.neighborhood,
+        city: d.origin.city,
+        state: d.origin.state,
+        zipCode: d.origin.zipCode,
+        coordinates: d.origin.coordinates
+      })) || []
+
+      const seen = new Set<string>()
+      const addresses = addressesRaw.filter(addr => {
+        const key = `${addr.street}|${addr.number}|${addr.city}|${addr.state}|${addr.zipCode}`
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
+      })
+
+      if (!addresses || addresses.length < 2) {
+        return reply.send(createApiResponse({ success: true, data: { addresses, distances: [] }, message: 'Poucas entregas disponíveis para cálculo.' }))
+      }
+
+      const distances = calculateDistancesGPU(addresses)
+      return reply.send(createApiResponse({ success: true, data: { addresses, distances }, message: 'Matriz de distâncias calculada com sucesso.' }))
+    }
+  )
   // Get all deliveries
   fastify.get(
     '/',
