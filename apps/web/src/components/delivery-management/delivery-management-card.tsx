@@ -1,10 +1,17 @@
 'use client'
 
+import { useState } from 'react'
+
 import { toast } from 'sonner'
+import { IconMap2 } from '@tabler/icons-react'
+
 import { Delivery } from '@/app/actions/deliveries'
 import { useAcceptDelivery, useUpdateDeliveryStatus } from '@/hooks/use-deliveries'
 import { cn, formatMinutesToDuration } from '@/lib/utils'
 import { Button } from '@/components/button'
+import { DeliveryMapModal } from './delivery-map-modal'
+
+import * as Dialog from '@radix-ui/react-dialog'
 
 const statusObject = {
   PENDING: {
@@ -57,6 +64,8 @@ interface DeliveryManagementCardProps {
 }
 
 export function DeliveryManagementCard({ delivery, isAvailable = false }: DeliveryManagementCardProps) {
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false)
+
   const status = delivery.status as StatusKey
   const parsedStatus = statusObject[status]
 
@@ -145,7 +154,9 @@ export function DeliveryManagementCard({ delivery, isAvailable = false }: Delive
 
           <div className="min-w-36 text-right">
             <div className="text-lg font-bold">{formatCurrency(delivery.value)}</div>
-            <div className="mt-2 text-sm text-gray-600">Estimado: {formatMinutesToDuration(delivery.estimatedTime)}</div>
+            <div className="mt-2 text-sm text-gray-600">
+              Possível estimativa: {formatMinutesToDuration(delivery.estimatedTime)}
+            </div>
 
             {delivery.actualTime && status === 'DELIVERED' && (
               <div className="mt-1 text-sm font-semibold text-green-700">
@@ -153,6 +164,29 @@ export function DeliveryManagementCard({ delivery, isAvailable = false }: Delive
               </div>
             )}
           </div>
+        </div>
+
+        <div>
+          <Dialog.Root open={isMapModalOpen} onOpenChange={setIsMapModalOpen}>
+            <Dialog.Trigger asChild>
+              <Button className="bg-sky-600 text-white hover:bg-sky-700">
+                <IconMap2 size={16} />
+                Trajeto
+              </Button>
+            </Dialog.Trigger>
+
+            <DeliveryMapModal
+              origin={{
+                lat: delivery.origin.coordinates.lat,
+                lng: delivery.origin.coordinates.lng
+              }}
+              destination={{
+                lat: delivery.destination.coordinates.lat,
+                lng: delivery.destination.coordinates.lng
+              }}
+              open={isMapModalOpen}
+            />
+          </Dialog.Root>
         </div>
 
         {!isCompleted && (
@@ -192,4 +226,3 @@ export function DeliveryManagementCard({ delivery, isAvailable = false }: Delive
     </article>
   )
 }
-
