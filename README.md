@@ -28,7 +28,7 @@ npm run dev
 
 ## Postman
 
-Utilize os arquivos separados dentro da pasta `postman` para importar as rotas da aplicações e realizar testes no backend via Postman.
+Utilize os arquivos separados dentro da pasta `apps/api/postman` para importar as rotas da aplicações e realizar testes no backend via Postman.
 
 ## Estrutura
 
