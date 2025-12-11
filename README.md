@@ -19,7 +19,7 @@ docker compose up -d
 npx prisma generate
 npx prisma migrate dev
 ```
-4. Renomeie o arquivo `.env.example` para `.env` na pasta `web` e adicione sua chave api key do googgle ([Documentação do Google para gerar a API KEY](https://developers.google.com/maps/documentation/javascript/get-api-key?setupProd=enable))
+4. Renomeie o arquivo `.env.example` para `.env` na pasta `web` e adicione sua chave api key do Google ([Documentação do Google para gerar a API KEY](https://developers.google.com/maps/documentation/javascript/get-api-key?setupProd=enable))
 5. Inicie o projeto na pasta raiz:
 ```sh
 npm run dev
@@ -38,6 +38,7 @@ Utilize os arquivos separados dentro da pasta `apps/api/postman` para importar a
 
 ## Tecnologias principais
 
+- Turbo Repo
 - Fastify
 - Prisma
 - Next.js
